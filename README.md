@@ -1,6 +1,6 @@
 # Move2AD — the trusted answer to "can I move to Abu Dhabi?"
 
-**Live demo:** https://move2ad-production-fsed0t.laravel.cloud — no login needed. English and Arabic.
+**Status:** built for the Hub71+ AI Hackathon (2 October 2026). The hosted demo has been taken offline; run it locally with your own OpenAI key. English and Arabic.
 
 Abu Dhabi wants talent, and talent abroad asks Google and ChatGPT. Today the answers they find come from content farms, outdated forums and, too often, scammers. Move2AD gives people who are still in their home country a personal, sourced answer, and catches the recruitment scams that target them before they pay.
 
@@ -52,7 +52,7 @@ Each fact carries:
 - whether that source is `official` or `secondary`
 - a `needs_verification` flag where numbers are only reported, not official
 
-These facts are the model's ground truth, and every brief, answer and scam check builds on them. You can browse the whole dataset, its sources and the allowed official domains on the live site at **`/data`**.
+These facts are the model's ground truth, and every brief, answer and scam check builds on them. You can browse the whole dataset, its sources and the allowed official domains at **`/data`** when the app is running, or directly in `database/data/facts.json`.
 
 Answer pages are published for search engines and AI assistants through `/sitemap.xml` and `/llms.txt`. Only answers marked safe to publish are listed (no personal details, no injected claims).
 
