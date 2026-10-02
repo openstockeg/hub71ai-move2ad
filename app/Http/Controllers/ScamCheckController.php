@@ -38,11 +38,7 @@ class ScamCheckController extends Controller
      */
     public function run(ScamCheck $check, ScamChecker $checker): JsonResponse
     {
-        $claimed = ScamCheck::whereKey($check->id)
-            ->where('status', Brief::PENDING)
-            ->update(['status' => Brief::GENERATING]);
-
-        if ($claimed) {
+        if (BriefController::claim($check)) {
             // The edge proxy may time out (~20s) before the model finishes; keep going, the page polls.
             ignore_user_abort(true);
             set_time_limit(BriefController::STALE_AFTER);

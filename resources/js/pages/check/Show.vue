@@ -4,8 +4,10 @@ import {
     BadgeCheck,
     CircleCheck,
     CircleHelp,
+    Info,
     ListChecks,
     ShieldAlert,
+    ShieldCheck,
     ShieldX,
     TriangleAlert,
 } from '@lucide/vue';
@@ -16,6 +18,9 @@ import checks from '@/routes/checks';
 import type { Check, Verdict } from '@/types/check';
 
 const props = defineProps<{ check: Check }>();
+
+// Official MOHRE service to look up a job offer by its number (also in facts.json).
+const MOHRE_OFFER_INQUIRY = 'https://receipts.mohre.gov.ae/OfferInquiry/Index';
 
 const labels = {
     en: {
@@ -36,10 +41,14 @@ const labels = {
         verdict: {
             likely_scam: 'Likely scam',
             suspicious: 'Suspicious',
-            no_red_flags_found: 'No red flags found',
+            no_red_flags_found: 'No obvious red flags — verify before you act',
             not_a_job_offer: 'Not a job offer',
         },
         severity: { high: 'High', medium: 'Medium', low: 'Low' },
+        verifyTitle: 'Always verify before you act',
+        verifyText:
+            'We only read the text you pasted — we cannot see the employer, so this page is never proof that an offer is real. A genuine UAE job offer has an offer number you can look up on MOHRE. Never pay anyone to get a job.',
+        verifyLink: 'Look up your offer on MOHRE',
     },
     ar: {
         yourMessage: 'العرض الذي لصقته',
@@ -59,10 +68,14 @@ const labels = {
         verdict: {
             likely_scam: 'احتيال على الأرجح',
             suspicious: 'مشبوه',
-            no_red_flags_found: 'لا توجد علامات تحذير',
+            no_red_flags_found: 'لا علامات تحذير واضحة — تحقّق قبل أي خطوة',
             not_a_job_offer: 'ليس عرض عمل',
         },
         severity: { high: 'عالية', medium: 'متوسطة', low: 'منخفضة' },
+        verifyTitle: 'تحقّق دائمًا قبل أي خطوة',
+        verifyText:
+            'نحن نقرأ النص الذي لصقته فقط ولا نرى صاحب العمل، لذلك هذه الصفحة ليست دليلًا على أن العرض حقيقي. عرض العمل الحقيقي في الإمارات يحمل رقمًا يمكنك التحقق منه لدى وزارة الموارد البشرية والتوطين. لا تدفع لأي أحد مقابل الحصول على وظيفة.',
+        verifyLink: 'تحقّق من عرضك لدى وزارة الموارد البشرية والتوطين',
     },
 } as const;
 
@@ -79,9 +92,10 @@ const verdictStyle: Record<Verdict, { icon: typeof ShieldX; class: string }> = {
         icon: TriangleAlert,
         class: 'border-amber-400/60 bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
     },
+    // Deliberately not green: we only read the text, so this is never an approval.
     no_red_flags_found: {
-        icon: CircleCheck,
-        class: 'border-emerald-400/60 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
+        icon: Info,
+        class: 'border-sky-400/60 bg-sky-50 text-sky-800 dark:bg-sky-950 dark:text-sky-300',
     },
     not_a_job_offer: {
         icon: CircleHelp,
@@ -132,21 +146,42 @@ const segments = computed(() => {
     return parts;
 });
 
-const loading = computed(() =>
-    ['pending', 'generating'].includes(props.check.status),
+const retrying = ref(false);
+const loading = computed(
+    () =>
+        retrying.value ||
+        ['pending', 'generating'].includes(props.check.status),
 );
 
-// Kick off the check, then poll as a fallback (e.g. page refreshed mid-check).
+// Run the check, then poll as a fallback (e.g. edge timeout or page refreshed mid-check).
 const http = useHttp(checks.run(props.check.id), {});
+const run = () =>
+    http
+        .submit()
+        .catch(() => {})
+        .finally(() =>
+            router.reload({
+                only: ['check'],
+                onFinish: () => (retrying.value = false),
+            }),
+        );
 onMounted(() => {
     if (props.check.status === 'pending') {
-        http.submit().finally(() => router.reload({ only: ['check'] }));
+        run();
     }
 });
-const { stop } = usePoll(
+
+// Retry the same message in place, so the user never has to paste it again.
+const retry = () => {
+    retrying.value = true;
+    loadingStep.value = 0;
+    run();
+};
+
+const { start, stop } = usePoll(
     3000,
     { only: ['check'] },
-    { autoStart: loading.value },
+    { autoStart: false },
 );
 
 // Rotate loading messages while waiting.
@@ -159,20 +194,16 @@ const ticker = setInterval(() => {
 }, 5000);
 onUnmounted(() => clearInterval(ticker));
 
-watch(
-    loading,
-    (isLoading) => {
-        if (!isLoading) {
-            stop();
-            clearInterval(ticker);
-        }
-    },
-    { immediate: true },
-);
+watch(loading, (isLoading) => (isLoading ? start() : stop()), {
+    immediate: true,
+});
 </script>
 
 <template>
-    <Head :title="c?.headline ?? t.yourMessage" />
+    <!-- Pasted messages can contain personal details: keep these pages out of search engines. -->
+    <Head :title="c?.headline ?? t.yourMessage">
+        <meta name="robots" content="noindex, nofollow" />
+    </Head>
 
     <!-- grid-cols-1 (minmax(0, 1fr)) everywhere: long words/URLs must never widen the page. -->
     <div
@@ -249,11 +280,13 @@ watch(
             class="rounded-xl border border-destructive/40 bg-card p-6"
         >
             <p>{{ t.failed }}</p>
-            <Link
-                :href="checks.create({ query: { lang: check.locale } })"
-                class="mt-3 inline-block font-medium text-brand underline underline-offset-4"
-                >{{ t.retry }}</Link
+            <button
+                type="button"
+                class="mt-3 font-medium text-brand underline underline-offset-4"
+                @click="retry"
             >
+                {{ t.retry }}
+            </button>
         </div>
 
         <!-- Ready -->
@@ -364,6 +397,23 @@ watch(
                     </li>
                 </ol>
             </section>
+
+            <aside class="rounded-xl border bg-sand p-4 text-sm">
+                <h2 class="flex items-center gap-2 font-semibold">
+                    <ShieldCheck class="size-4 shrink-0 text-brand" />{{
+                        t.verifyTitle
+                    }}
+                </h2>
+                <p class="mt-1 text-muted-foreground">{{ t.verifyText }}</p>
+                <a
+                    :href="MOHRE_OFFER_INQUIRY"
+                    target="_blank"
+                    rel="noopener"
+                    class="mt-3 inline-flex items-center gap-1.5 font-medium text-brand underline underline-offset-4"
+                >
+                    <BadgeCheck class="size-4 shrink-0" />{{ t.verifyLink }}
+                </a>
+            </aside>
         </article>
     </div>
 </template>

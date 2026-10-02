@@ -144,21 +144,42 @@ const sourcePath = (url: string) => {
         : decodeURIComponent(pathname).replace(/\/$/, '');
 };
 
-const loading = computed(() =>
-    ['pending', 'generating'].includes(props.brief.status),
+const retrying = ref(false);
+const loading = computed(
+    () =>
+        retrying.value ||
+        ['pending', 'generating'].includes(props.brief.status),
 );
 
-// Kick off generation, then poll as a fallback (e.g. page refreshed mid-generation).
+// Generate, then poll as a fallback (e.g. edge timeout or page refreshed mid-generation).
 const http = useHttp(generate(props.brief.id), {});
+const run = () =>
+    http
+        .submit()
+        .catch(() => {})
+        .finally(() =>
+            router.reload({
+                only: ['brief'],
+                onFinish: () => (retrying.value = false),
+            }),
+        );
 onMounted(() => {
     if (props.brief.status === 'pending') {
-        http.submit().finally(() => router.reload({ only: ['brief'] }));
+        run();
     }
 });
-const { stop } = usePoll(
+
+// Retry the same profile in place, so the user never has to fill the form again.
+const retry = () => {
+    retrying.value = true;
+    loadingStep.value = 0;
+    run();
+};
+
+const { start, stop } = usePoll(
     3000,
     { only: ['brief'] },
-    { autoStart: loading.value },
+    { autoStart: false },
 );
 
 // Rotate loading messages while waiting.
@@ -171,16 +192,9 @@ const ticker = setInterval(() => {
 }, 6000);
 onUnmounted(() => clearInterval(ticker));
 
-watch(
-    loading,
-    (isLoading) => {
-        if (!isLoading) {
-            stop();
-            clearInterval(ticker);
-        }
-    },
-    { immediate: true },
-);
+watch(loading, (isLoading) => (isLoading ? start() : stop()), {
+    immediate: true,
+});
 </script>
 
 <template>
@@ -258,11 +272,13 @@ watch(
             class="rounded-xl border border-destructive/40 bg-card p-6"
         >
             <p>{{ t.failed }}</p>
-            <Link
-                :href="home()"
-                class="mt-3 inline-block font-medium text-brand underline underline-offset-4"
-                >{{ t.retry }}</Link
+            <button
+                type="button"
+                class="mt-3 font-medium text-brand underline underline-offset-4"
+                @click="retry"
             >
+                {{ t.retry }}
+            </button>
         </div>
 
         <!-- Ready -->

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Brief;
 use App\Services\BriefGenerator;
 use App\Services\Facts;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,11 +46,7 @@ class BriefController extends Controller
      */
     public function generate(Brief $brief, BriefGenerator $generator): JsonResponse
     {
-        $claimed = Brief::whereKey($brief->id)
-            ->where('status', Brief::PENDING)
-            ->update(['status' => Brief::GENERATING]);
-
-        if ($claimed) {
+        if (self::claim($brief)) {
             // The edge proxy may time out (~20s) before the model finishes; keep going, the page polls.
             ignore_user_abort(true);
             set_time_limit(self::STALE_AFTER);
@@ -56,6 +54,22 @@ class BriefController extends Controller
         }
 
         return response()->json(['status' => $brief->fresh()->status]);
+    }
+
+    /**
+     * Atomically move a pending, failed or stuck record to "generating", so only one
+     * request runs the model and a failed run can be retried without re-entering input.
+     */
+    public static function claim(Model $record): bool
+    {
+        return (bool) $record->newQuery()
+            ->whereKey($record->getKey())
+            ->where(fn (Builder $query) => $query
+                ->whereIn('status', [Brief::PENDING, Brief::FAILED])
+                ->orWhere(fn (Builder $query) => $query
+                    ->where('status', Brief::GENERATING)
+                    ->where('updated_at', '<', now()->subSeconds(self::STALE_AFTER))))
+            ->update(['status' => Brief::GENERATING]);
     }
 
     public function show(Brief $brief, Facts $facts): Response

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Form, Head, Link } from '@inertiajs/vue3';
-import { ShieldAlert } from '@lucide/vue';
+import { BadgeCheck, ShieldAlert } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,9 @@ import { Spinner } from '@/components/ui/spinner';
 import checks from '@/routes/checks';
 
 const props = defineProps<{ locale: 'en' | 'ar' }>();
+
+// Federal Decree-Law 33/2021: the employer bears all recruitment costs (also in facts.json).
+const EMPLOYER_PAYS_LAW = 'https://uaelegislation.gov.ae/en/legislations/1541';
 
 const labels = {
     en: {
@@ -19,6 +22,7 @@ const labels = {
         privacy:
             'Remove your name and phone number before pasting. Free · no account needed',
         rule: 'In the UAE, the employer pays for your visa. Anyone asking you for a "visa fee" is breaking the law.',
+        ruleSource: 'Federal Decree-Law 33/2021',
         sample: `Congratulations! You have been selected for the position of Senior Software Engineer at Al Noor Petroleum, Abu Dhabi. Salary AED 45,000/month + free accommodation and flight. No interview needed.
 To process your work visa and medical, please pay a refundable visa processing fee of USD 350 within 24 hours via Western Union to our HR officer Mr. Khalid.
 Contact: alnoor.hr.recruitment@gmail.com / WhatsApp +971 55 123 4567`,
@@ -31,6 +35,7 @@ Contact: alnoor.hr.recruitment@gmail.com / WhatsApp +971 55 123 4567`,
         submit: 'افحص هذا العرض',
         privacy: 'احذف اسمك ورقم هاتفك قبل اللصق. مجاني · بدون حساب',
         rule: 'في الإمارات، صاحب العمل هو من يدفع تكاليف تأشيرتك. من يطلب منك "رسوم تأشيرة" يخالف القانون.',
+        ruleSource: 'المرسوم بقانون اتحادي رقم 33 لسنة 2021',
         sample: `مبروك! تم اختيارك لوظيفة مهندس برمجيات أول في شركة النور للبترول – أبوظبي. الراتب 45,000 درهم شهريًا مع سكن وتذكرة طيران مجانية. لا حاجة لمقابلة.
 لإتمام إجراءات تأشيرة العمل والفحص الطبي يرجى دفع رسوم معالجة تأشيرة مستردة بقيمة 350 دولارًا خلال 24 ساعة عبر ويسترن يونيون إلى مسؤول الموارد البشرية السيد خالد.
 للتواصل: alnoor.hr.recruitment@gmail.com / واتساب ‎+971 55 123 4567`,
@@ -101,6 +106,7 @@ const isDesktop = window.matchMedia('(min-width: 768px)').matches;
                 <textarea
                     v-model="message"
                     name="message"
+                    :aria-label="t.placeholder"
                     rows="8"
                     required
                     minlength="20"
@@ -137,7 +143,21 @@ const isDesktop = window.matchMedia('(min-width: 768px)').matches;
                 class="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm"
             >
                 <ShieldAlert class="mt-0.5 size-4 shrink-0 text-destructive" />
-                {{ t.rule }}
+                <span>
+                    {{ t.rule }}
+                    <a
+                        :href="EMPLOYER_PAYS_LAW"
+                        target="_blank"
+                        rel="noopener"
+                        class="mt-2 flex w-fit flex-wrap items-center gap-x-1 rounded-md bg-brand/10 px-2 py-0.5 text-xs text-brand"
+                    >
+                        <BadgeCheck class="size-3.5 shrink-0" />
+                        <span>{{ t.ruleSource }}</span>
+                        <span dir="ltr" class="opacity-70"
+                            >· uaelegislation.gov.ae</span
+                        >
+                    </a>
+                </span>
             </p>
         </div>
     </section>

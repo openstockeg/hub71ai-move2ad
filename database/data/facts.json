@@ -104,6 +104,13 @@
       "source_type": "secondary"
     },
     {
+      "id": "scam.verify_offer",
+      "category": "scam",
+      "claim": "A genuine UAE job offer issued through MOHRE carries a transaction/offer number that the candidate can look up on MOHRE's official Offer Inquiry service before signing anything or paying anyone.",
+      "source_url": "https://receipts.mohre.gov.ae/OfferInquiry/Index",
+      "source_type": "official"
+    },
+    {
       "id": "scam.report",
       "category": "scam",
       "claim": "In Abu Dhabi, report fraud to Abu Dhabi Police via the Aman service; keep all messages as evidence.",
