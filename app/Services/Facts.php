@@ -63,7 +63,7 @@ class Facts
     }
 
     /**
-     * Remove tracking parameters OpenAI appends to cited URLs.
+     * Remove tracking parameters (utm_*, trk) from cited URLs.
      */
     public static function cleanUrl(string $url): string
     {
@@ -74,10 +74,22 @@ class Facts
         }
 
         parse_str($parts['query'], $query);
-        $query = array_filter($query, fn ($key) => ! str_starts_with((string) $key, 'utm_'), ARRAY_FILTER_USE_KEY);
+        $query = array_filter($query, fn ($key) => ! str_starts_with((string) $key, 'utm_') && $key !== 'trk', ARRAY_FILTER_USE_KEY);
 
         $base = strtok($url, '?');
 
         return $query ? $base.'?'.http_build_query($query) : $base;
+    }
+
+    /**
+     * Comparable form of a URL: host without www, path without trailing slash, clean query.
+     */
+    public static function urlKey(string $url): string
+    {
+        $parts = parse_url(self::cleanUrl($url));
+        $host = preg_replace('/^www\./', '', strtolower($parts['host'] ?? ''));
+        $path = rtrim($parts['path'] ?? '', '/');
+
+        return $host.$path.(isset($parts['query']) ? '?'.$parts['query'] : '');
     }
 }

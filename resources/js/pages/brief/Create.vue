@@ -57,7 +57,7 @@ const locales = [
 const promises = [
     {
         icon: BadgeCheck,
-        text: 'Every answer links to an official .gov.ae source',
+        text: 'Answers link to official UAE and Abu Dhabi sources',
     },
     { icon: Sparkles, text: 'Personal to your profession, country and family' },
     { icon: ShieldAlert, text: 'Flags scams before they cost you money' },

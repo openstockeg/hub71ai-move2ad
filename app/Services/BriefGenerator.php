@@ -29,6 +29,7 @@ class BriefGenerator
                 'type' => 'web_search',
                 'filters' => ['allowed_domains' => $this->facts->allowedDomains()],
             ]],
+            'include' => ['web_search_call.action.sources'],
             'text' => ['format' => [
                 'type' => 'json_schema',
                 'name' => 'abu_dhabi_brief',
@@ -40,7 +41,7 @@ class BriefGenerator
         $content = json_decode(ResponsesClient::text($response), true, flags: JSON_THROW_ON_ERROR);
 
         return [
-            'content' => $this->cleanSources($content),
+            'content' => $this->cleanSources($content, ResponsesClient::searchUrls($response)),
             'model' => $response['model'] ?? null,
         ];
     }
@@ -87,16 +88,24 @@ class BriefGenerator
     }
 
     /**
-     * Strip tracking params from model-provided source URLs.
+     * Strip tracking params from model-provided source URLs, and drop any URL
+     * that is neither a curated fact nor a web search result (i.e. made up).
      *
      * @param  array<string, mixed>  $content
+     * @param  array<int, string>  $searchUrls
      * @return array<string, mixed>
      */
-    protected function cleanSources(array $content): array
+    protected function cleanSources(array $content, array $searchUrls): array
     {
-        array_walk_recursive($content, function (&$value, $key) {
+        $known = collect($this->facts->facts())->pluck('source_url')
+            ->merge($searchUrls)
+            ->filter()
+            ->map(fn (string $url) => Facts::urlKey($url))
+            ->flip();
+
+        array_walk_recursive($content, function (&$value, $key) use ($known) {
             if ($key === 'source_url' && is_string($value)) {
-                $value = Facts::cleanUrl($value);
+                $value = $known->has(Facts::urlKey($value)) ? Facts::cleanUrl($value) : null;
             }
         });
 

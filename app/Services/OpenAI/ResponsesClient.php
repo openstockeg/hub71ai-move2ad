@@ -62,6 +62,27 @@ class ResponsesClient
             ->all();
     }
 
+    /**
+     * URLs the web_search tool actually returned or opened.
+     * Search sources are only present when the request includes "web_search_call.action.sources".
+     *
+     * @param  array<string, mixed>  $response
+     * @return array<int, string>
+     */
+    public static function searchUrls(array $response): array
+    {
+        return collect($response['output'] ?? [])
+            ->where('type', 'web_search_call')
+            ->flatMap(fn (array $call) => [
+                $call['action']['url'] ?? null,
+                ...collect($call['action']['sources'] ?? [])->pluck('url'),
+            ])
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
     protected function http(): PendingRequest
     {
         return Http::baseUrl(config('services.openai.base_url'))

@@ -2,6 +2,7 @@
 
 use App\Models\Brief;
 use App\Services\BriefGenerator;
+use App\Services\Facts;
 use Illuminate\Support\Facades\Http;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -32,15 +33,26 @@ function fakeBriefContent(): array
     ];
 }
 
-function fakeOpenAI(): void
+function fakeOpenAI(?array $content = null): void
 {
     Http::fake([
         'api.openai.com/*' => Http::response([
             'model' => 'gpt-test',
-            'output' => [[
-                'type' => 'message',
-                'content' => [['type' => 'output_text', 'text' => json_encode(fakeBriefContent()), 'annotations' => []]],
-            ]],
+            'output' => [
+                [
+                    'type' => 'web_search_call',
+                    'action' => ['type' => 'search', 'query' => 'rent', 'sources' => [
+                        ['type' => 'url', 'url' => 'https://adro.gov.ae/en/Visas/'],
+                        ['type' => 'url', 'url' => 'https://www.gaiarealty.ae/blog/rent'],
+                        ['type' => 'url', 'url' => 'https://uaelegislation.gov.ae/en/legislations/1541'],
+                    ]],
+                ],
+                ['type' => 'web_search_call', 'action' => ['type' => 'open_page', 'url' => 'https://u.ae/en/jobseeker']],
+                [
+                    'type' => 'message',
+                    'content' => [['type' => 'output_text', 'text' => json_encode($content ?? fakeBriefContent()), 'annotations' => []]],
+                ],
+            ],
         ]),
     ]);
 }
@@ -74,7 +86,8 @@ test('submitting the form generates a brief', function () {
         ->and($brief->content['fit']['source_url'])->toBe('https://www.adro.gov.ae/en/Visas');
 
     Http::assertSent(fn ($request) => $request['text']['format']['type'] === 'json_schema'
-        && in_array('adro.gov.ae', $request['tools'][0]['filters']['allowed_domains']));
+        && in_array('adro.gov.ae', $request['tools'][0]['filters']['allowed_domains'])
+        && $request['include'] === ['web_search_call.action.sources']);
 
     // A second call does not generate again.
     $this->postJson(route('briefs.generate', $brief))->assertJson(['status' => Brief::READY]);
@@ -96,6 +109,22 @@ test('brief page lists sources and marks official ones', function () {
             ->where('brief.sources.1.host', 'gaiarealty.ae')
             ->where('brief.sources.1.official', false)
             ->where('brief.sources.2.official', true));
+});
+
+test('source urls not found in facts or search results are dropped', function () {
+    $content = fakeBriefContent();
+    $content['steps'][0]['source_url'] = 'https://u.ae/ar/made-up/jobseeker-visit-visa';
+    $content['watch_out'][0]['source_url'] = 'https://u.ae/en/jobseeker?trk=public_post-text';
+    $content['visa_paths'][0]['source_url'] = collect(app(Facts::class)->facts())->first()['source_url'];
+    fakeOpenAI($content);
+
+    $brief = Brief::create(['country' => 'Egypt', 'profession' => 'Nurse', 'experience_years' => 3, 'family' => 'single', 'locale' => 'ar']);
+    $brief->generate(app(BriefGenerator::class));
+
+    expect($brief->content['steps'][0]['source_url'])->toBeNull()
+        ->and($brief->content['watch_out'][0]['source_url'])->toBe('https://u.ae/en/jobseeker')
+        ->and($brief->content['visa_paths'][0]['source_url'])->toBe($content['visa_paths'][0]['source_url'])
+        ->and($brief->content['fit']['source_url'])->toBe('https://www.adro.gov.ae/en/Visas');
 });
 
 test('a failed generation is stored as failed', function () {
