@@ -53,10 +53,13 @@ watchEffect(() => {
                     dir="ltr"
                     class="flex items-center gap-2 font-semibold"
                 >
-                    <span
-                        class="flex size-7 items-center justify-center rounded-md bg-brand text-xs font-bold text-brand-foreground"
-                        >M2</span
-                    >
+                    <img
+                        src="/logo-96.png"
+                        alt=""
+                        width="32"
+                        height="32"
+                        class="size-8 dark:rounded-md dark:bg-white dark:p-0.5"
+                    />
                     Move2AD
                 </Link>
                 <div class="flex items-center gap-4 text-sm">

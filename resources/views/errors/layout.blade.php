@@ -36,7 +36,7 @@
     </style>
 </head>
 <body>
-    <header><nav><a class="logo" href="{{ url('/') }}"><span class="mark">M2</span>Move2AD</a></nav></header>
+    <header><nav><a class="logo" href="{{ url('/') }}"><img src="/logo-96.png" alt="" width="32" height="32">Move2AD</a></nav></header>
     <main>
         <div class="wrap">
             <p class="code">@yield('code')</p>
