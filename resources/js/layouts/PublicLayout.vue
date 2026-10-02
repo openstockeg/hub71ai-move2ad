@@ -2,7 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { Database, ShieldAlert } from '@lucide/vue';
 import { computed, watchEffect } from 'vue';
-import { dashboard, data, home, login } from '@/routes';
+import { data, home } from '@/routes';
 import checks from '@/routes/checks';
 
 const page = usePage<{
@@ -18,16 +18,12 @@ const locale = computed(
 const labels = {
     en: {
         check: 'Check a job offer',
-        journey: 'My journey',
-        login: 'Log in',
         data: 'Our data & sources',
         disclaimer:
             'Move2AD is an independent guide, not a government service. Answers are grounded in official UAE and Abu Dhabi sources — always confirm on the linked page before you act.',
     },
     ar: {
         check: 'افحص عرض عمل',
-        journey: 'رحلتي',
-        login: 'تسجيل الدخول',
         data: 'بياناتنا ومصادرنا',
         disclaimer:
             'Move2AD دليل مستقل وليس خدمة حكومية. تستند الإجابات إلى مصادر رسمية في الإمارات وأبوظبي — تأكد دائمًا من الصفحة المرتبطة قبل اتخاذ أي إجراء.',
@@ -71,18 +67,6 @@ watchEffect(() => {
                         :href="checks.create({ query: { lang: locale } })"
                         class="flex items-center gap-1.5 font-medium text-brand hover:underline"
                         ><ShieldAlert class="size-4" />{{ t.check }}</Link
-                    >
-                    <Link
-                        v-if="$page.props.auth.user"
-                        :href="dashboard()"
-                        class="text-muted-foreground hover:text-foreground"
-                        >{{ t.journey }}</Link
-                    >
-                    <Link
-                        v-else
-                        :href="login()"
-                        class="text-muted-foreground hover:text-foreground"
-                        >{{ t.login }}</Link
                     >
                 </div>
             </nav>
