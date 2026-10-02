@@ -49,6 +49,8 @@ class BriefController extends Controller
             ->update(['status' => Brief::GENERATING]);
 
         if ($claimed) {
+            // The edge proxy may time out (~20s) before the model finishes; keep going, the page polls.
+            ignore_user_abort(true);
             set_time_limit(self::STALE_AFTER);
             $brief->generate($generator);
         }
