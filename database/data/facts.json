@@ -1,6 +1,6 @@
 {
     "meta": {
-        "verified_at": "2026-10-01",
+        "verified_at": "2026-10-02",
         "note": "Curated grounding facts for Move2AD. source_type 'official' = government/regulator page; 'secondary' = reputable press/legal/industry source citing official data. Facts with needs_verification=true must be re-checked via web_search (allowed_domains) before being shown as definitive."
     },
     "allowed_domains": [
@@ -21,7 +21,8 @@
         "adgm.com",
         "hub71.com",
         "mediaoffice.abudhabi",
-        "addata.gov.ae"
+        "addata.gov.ae",
+        "adpolice.gov.ae"
     ],
     "facts": [
         {
@@ -80,22 +81,24 @@
         {
             "id": "visa.green.freelancer",
             "category": "visa",
-            "claim": "UAE Green Visa for freelancers: MOHRE freelance/self-employment permit, bachelor's degree or specialised diploma, and self-employment income of at least AED 360,000 per year for the previous two years.",
-            "values": { "duration_years": 5, "min_annual_income_aed": 360000 },
-            "source_url": "https://www.uaeexperthub.com/green-visa-salary-requirements-uae-aed-15000-threshold-explained/",
-            "source_type": "secondary",
-            "needs_verification": true
+            "claim": "UAE Green Visa for freelancers (5 years, no sponsor): MOHRE freelance or self-employment permit, bachelor's degree or specialised diploma, and freelance income of at least AED 360,000 a year over the previous two years.",
+            "values": {
+                "duration_years": 5,
+                "min_annual_income_aed": 360000
+            },
+            "source_url": "https://icp.gov.ae/en/services/uae-green-residency/",
+            "source_type": "official"
         },
         {
             "id": "visa.job_seeker",
             "category": "visa",
-            "claim": "UAE job-seeker visit visa: 60, 90 or 120 days, no local sponsor needed, extendable up to 180 days total. Eligible: bachelor's degree targeting MOHRE skill level 1, 2 or 3, or graduated within the last two years from a top-500 world university. Apply via ICP or GDRFA Dubai.",
+            "claim": "UAE job-seeker visit visa: 60, 90 or 120 days, one trip, no local sponsor needed, extendable up to 180 days in total. Eligible: MOHRE skill level 1, 2 or 3, or a graduate of a top-500 world university within the last two years; bachelor's degree or equivalent and a financial guarantee. Apply via ICP.",
             "values": {
                 "durations_days": [60, 90, 120],
                 "max_total_days": 180
             },
-            "source_url": "https://gulfnews.com/uae/government/uae-jobseeker-visa-who-can-apply-and-how-it-works-1.500670374",
-            "source_type": "secondary"
+            "source_url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/jobseeker-visit-visa",
+            "source_type": "official"
         },
         {
             "id": "visa.job_seeker.fees",
@@ -135,9 +138,9 @@
         {
             "id": "scam.report",
             "category": "scam",
-            "claim": "In Abu Dhabi, report fraud to Abu Dhabi Police via the Aman service; keep all messages as evidence.",
-            "source_url": "https://www.uaeexperthub.com/common-uae-scams-2026-report-ecrime/",
-            "source_type": "secondary"
+            "claim": "Report a scam or fraud to Abu Dhabi Police: police stations are the competent authority for criminal reports. Aman (toll-free 800 2626) is the police's confidential 24/7 channel for tip-offs about crime. Keep all messages and payment receipts as evidence.",
+            "source_url": "https://srv.adpolice.gov.ae/en/aman/Pages/QA.aspx",
+            "source_type": "official"
         },
         {
             "id": "demand.population",
@@ -154,9 +157,9 @@
         {
             "id": "demand.workforce",
             "category": "demand",
-            "claim": "Abu Dhabi's workforce grew 9.1% in 2024, with professional roles increasing across tech, advanced manufacturing and finance.",
-            "source_url": "https://www.timeoutabudhabi.com/news/abu-dhabi-population-growth-2025",
-            "source_type": "secondary"
+            "claim": "Employment in Abu Dhabi grew 9.1% in 2024 to 2.76 million people. Blue-collar jobs grew 11.4% and white-collar jobs 6.4%, driven by large infrastructure and construction projects.",
+            "source_url": "https://scad.gov.ae/web/guest/w/abu-dhabi-population-in-2024-grows-7-5-to-reach-4-14m",
+            "source_type": "official"
         },
         {
             "id": "demand.sectors",
@@ -189,15 +192,14 @@
         {
             "id": "community.diversity",
             "category": "community",
-            "claim": "Around 2.2 million expatriates of more than 200 nationalities live in Abu Dhabi. The largest UAE communities are from India, Pakistan, Bangladesh, the Philippines and Egypt, with significant communities from other Arab countries, the UK and the US.",
-            "source_url": "https://en.wikipedia.org/wiki/Expatriates_in_the_United_Arab_Emirates",
-            "source_type": "secondary",
-            "needs_verification": true
+            "claim": "Abu Dhabi is home to more than 2.2 million expatriates of over 200 nationalities.",
+            "source_url": "https://www.mediaoffice.abudhabi/en/government-affairs/executive-committee-approves-the-launch-of-abu-dhabi-residents-office-to-support-and-empower-global-talent-in-the-emirate/",
+            "source_type": "official"
         },
         {
             "id": "community.jiran",
             "category": "community",
-            "claim": "The Jiran Volunteer Programme, launched at LIVEX 2026, helps new residents settle in, meet neighbours and find local services.",
+            "claim": "Abu Dhabi's Department of Community Development launched the Jiran Volunteer Programme at LIVEX 2026 to help new residents settle in, get to know their neighbours and find local services.",
             "source_url": "https://gulfnews.com/uae/abu-dhabi/livex-closes-with-deals-worth-over-aed-150-billion-and-a-promise-to-return-1.500695186",
             "source_type": "secondary"
         },
@@ -211,23 +213,24 @@
         {
             "id": "gov.tamm",
             "category": "government",
-            "claim": "TAMM is Abu Dhabi's unified government services platform with over 1,000 services and an AI assistant; use it for transactions once you are a resident.",
-            "source_url": "https://www.langchain.com/blog/customers-abu-dhabi-government",
-            "source_type": "secondary"
+            "claim": "TAMM is Abu Dhabi's unified government services platform: TAMM 4.0 offers over 1,100 public and private services and an AI assistant that can complete many services for you. Use it for transactions once you are a resident.",
+            "source_url": "https://www.mediaoffice.abudhabi/en/technology/department-of-government-enablement-launches-tamm-4-during-gitex-global-2025/",
+            "source_type": "official"
         },
         {
             "id": "housing.rent_freeze",
             "category": "housing",
-            "claim": "Since 2 June 2026, ADREC has frozen rent increases at 0% for residential, commercial and industrial properties in Abu Dhabi (excluding ADGM jurisdiction, e.g. Al Reem and Al Maryah islands), until further notice. Renewals and new agreements must reference the rent in the property's most recent Tawtheeq contract.",
-            "source_url": "https://www.mondaq.com/landlord-tenant-leases/1849454/abu-dhabi-rental-pricing-reform-the-0-rent-cap-is-temporary-but-its-impact-is-immediate",
-            "source_type": "secondary"
+            "claim": "On 3 June 2026 the Government of Abu Dhabi cut the annual rent increase cap from 5% to 0% for residential, commercial and industrial properties, temporarily and until further notice. All renewals and new agreements reference the rent in the property's last registered Tawtheeq contract.",
+            "source_url": "https://adrec.gov.ae/en/news/press-release-26---rental-freeze-update",
+            "source_type": "official"
         },
         {
             "id": "housing.tawtheeq",
             "category": "housing",
-            "claim": "Tawtheeq is Abu Dhabi's official tenancy contract registration (via the DARI platform). A registered Tawtheeq is typically needed to connect water/electricity, for residence visas linked to tenancy, and for some school enrolments.",
-            "source_url": "https://taterealestate.ae/tawtheeq-abu-dhabi-the-complete-guide-for-residential-and-commercial-tenants-2026/",
-            "source_type": "secondary"
+            "claim": "Tawtheeq is Abu Dhabi's official tenancy contract registration, done online through DARI or TAMM (AED 50 to register a new lease). A contract signed outside the online service is not a Tawtheeq contract. A registered Tawtheeq is commonly asked for when connecting water and electricity and for tenancy-linked services.",
+            "source_url": "https://www.tamm.abudhabi/en/life-events/individual/HousingProperties/Contracts-and-Consultations/RequesttoRegisteraNewLeaseContract",
+            "source_type": "official",
+            "needs_verification": true
         },
         {
             "id": "housing.verify_listing",
@@ -250,7 +253,8 @@
                 "saadiyat": [85000, 210000]
             },
             "source_url": "https://www.gaiarealty.ae/blog/average-rental-prices-one-bedroom-apartments-abu-dhabi",
-            "source_type": "secondary"
+            "source_type": "secondary",
+            "needs_verification": true
         },
         {
             "id": "housing.move_in_costs",
@@ -272,14 +276,15 @@
             "category": "education",
             "claim": "Private school fees in Abu Dhabi for 2026 range roughly AED 27k–65k (KG), AED 35k–85k (primary), AED 45k–100k (secondary), AED 60k–110k (sixth form/IB). Popular British/American/IB schools have waitlists of 6–18 months; apply September–December for the next September intake.",
             "source_url": "https://www.ischooladvisor.com/articles/schooling-and-school-choice/costs-and-fees-understanding-funding/international-school-fees-abu-dhabi-2026",
-            "source_type": "secondary"
+            "source_type": "secondary",
+            "needs_verification": true
         },
         {
             "id": "banking.new_arrival",
             "category": "banking",
-            "claim": "Most UAE banks, and all digital banks, accept the Emirates ID application receipt or the digital ID in UAE Pass while the physical card is produced, so new arrivals can open an account within days.",
-            "source_url": "https://khaleejwise.com/open-bank-account-uae/",
-            "source_type": "secondary"
+            "claim": "To open a UAE bank account, banks usually ask for your Emirates ID, residence visa, passport and a salary certificate or employment letter. Many banks let you apply online or in their app, and approval takes from a few hours to a few days.",
+            "source_url": "https://u.ae/en/information-and-services/finance-and-investment/banking-in-uae",
+            "source_type": "official"
         },
         {
             "id": "founder.hub71_access",
@@ -291,8 +296,8 @@
         {
             "id": "founder.adrec_hub71",
             "category": "founder",
-            "claim": "On 1 October 2026 at LIVEX 2026, ADREC and Hub71 signed an MoU giving proptech startups a regulated testing environment, pilots and mentorship in Abu Dhabi's real estate sector.",
-            "source_url": "https://thetechnologyexpress.com/adrec-and-hub71-partner-to-accelerate-real-estate-technology-innovation/",
+            "claim": "At LIVEX 2026 (29 September – 1 October), ADREC and Hub71 signed a two-year MoU that connects real estate sector challenges with startups through pilots, solution validation and mentorship.",
+            "source_url": "https://www.zawya.com/en/press-release/events-conferences/adrec-and-hub71-sign-mou-to-connect-abu-dhabis-real-estate-sector-with-technology-startups-1449654",
             "source_type": "secondary"
         }
     ]
