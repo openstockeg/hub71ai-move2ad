@@ -213,7 +213,9 @@ watch(loading, (isLoading) => (isLoading ? start() : stop()), {
                 t.family[brief.family]
             }}</span>
             <Link
-                :href="home()"
+                :href="
+                    home(brief.locale === 'ar' ? { query: { lang: 'ar' } } : {})
+                "
                 class="ms-auto underline underline-offset-4 hover:text-foreground"
                 >{{ t.newBrief }}</Link
             >

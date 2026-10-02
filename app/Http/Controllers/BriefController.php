@@ -20,9 +20,11 @@ class BriefController extends Controller
      */
     public const int STALE_AFTER = 180;
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('brief/Create');
+        return Inertia::render('brief/Create', [
+            'locale' => $request->query('lang') === 'ar' ? 'ar' : 'en',
+        ]);
     }
 
     public function store(Request $request): RedirectResponse

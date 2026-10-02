@@ -47,7 +47,9 @@ watchEffect(() => {
                 class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4"
             >
                 <Link
-                    :href="home()"
+                    :href="
+                        home(locale === 'ar' ? { query: { lang: 'ar' } } : {})
+                    "
                     dir="ltr"
                     class="flex items-center gap-2 font-semibold"
                 >
