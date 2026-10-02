@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { Link, usePage } from "@inertiajs/vue3";
-import { computed, watchEffect } from "vue";
-import { dashboard, home, login } from "@/routes";
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed, watchEffect } from 'vue';
+import { dashboard, home, login } from '@/routes';
 
-const page = usePage<{ brief?: { locale: "en" | "ar" } }>();
+const page = usePage<{ brief?: { locale: 'en' | 'ar' } }>();
 
 // Pages with Arabic content flip the whole chrome (header, footer, scrollbar side) to RTL.
-const locale = computed(() => page.props.brief?.locale ?? "en");
+const locale = computed(() => page.props.brief?.locale ?? 'en');
 
 const labels = {
     en: {
-        journey: "My journey",
-        login: "Log in",
+        journey: 'My journey',
+        login: 'Log in',
         disclaimer:
-            "Move2AD is an independent guide, not a government service. Answers are grounded in official UAE and Abu Dhabi sources — always confirm on the linked page before you act.",
+            'Move2AD is an independent guide, not a government service. Answers are grounded in official UAE and Abu Dhabi sources — always confirm on the linked page before you act.',
     },
     ar: {
-        journey: "رحلتي",
-        login: "تسجيل الدخول",
+        journey: 'رحلتي',
+        login: 'تسجيل الدخول',
         disclaimer:
-            "Move2AD دليل مستقل وليس خدمة حكومية. تستند الإجابات إلى مصادر رسمية في الإمارات وأبوظبي — تأكد دائمًا من الصفحة المرتبطة قبل اتخاذ أي إجراء.",
+            'Move2AD دليل مستقل وليس خدمة حكومية. تستند الإجابات إلى مصادر رسمية في الإمارات وأبوظبي — تأكد دائمًا من الصفحة المرتبطة قبل اتخاذ أي إجراء.',
     },
 } as const;
 
@@ -27,7 +27,7 @@ const t = computed(() => labels[locale.value]);
 
 watchEffect(() => {
     document.documentElement.lang = locale.value;
-    document.documentElement.dir = locale.value === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = locale.value === 'ar' ? 'rtl' : 'ltr';
 });
 </script>
 

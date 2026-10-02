@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, router, useHttp, usePoll } from "@inertiajs/vue3";
+import { Head, Link, router, useHttp, usePoll } from '@inertiajs/vue3';
 import {
     AlertTriangle,
     Banknote,
@@ -11,114 +11,114 @@ import {
     Rocket,
     Home,
     Luggage,
-} from "@lucide/vue";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import SourceLink from "@/components/SourceLink.vue";
-import { Skeleton } from "@/components/ui/skeleton";
-import { home } from "@/routes";
-import { generate } from "@/routes/briefs";
-import type { Brief, Stage } from "@/types/brief";
+} from '@lucide/vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import SourceLink from '@/components/SourceLink.vue';
+import { Skeleton } from '@/components/ui/skeleton';
+import { home } from '@/routes';
+import { generate } from '@/routes/briefs';
+import type { Brief, Stage } from '@/types/brief';
 
 const props = defineProps<{ brief: Brief }>();
 
 const labels = {
     en: {
-        loading: "Checking official sources for you…",
+        loading: 'Checking official sources for you…',
         loadingSteps: [
-            "Reading Golden & Green Visa criteria on added.gov.ae",
-            "Checking job-seeker visa rules on icp.gov.ae",
-            "Comparing rents and upfront costs",
-            "Scanning for scams that target your profile",
-            "Writing your brief",
+            'Reading Golden & Green Visa criteria on added.gov.ae',
+            'Checking job-seeker visa rules on icp.gov.ae',
+            'Comparing rents and upfront costs',
+            'Scanning for scams that target your profile',
+            'Writing your brief',
         ],
-        failed: "We could not finish your brief. Please try again.",
-        retry: "Try again",
-        fit: "Fit",
-        visas: "Your visa routes",
-        money: "Money",
-        salary: "Salary",
-        rent: "1-bedroom rent / year",
-        upfront: "Upfront costs",
-        steps: "Your path",
-        watchOut: "Watch out",
-        questions: "People like you also ask",
-        sources: "Sources",
-        official: "official",
-        years: "yrs",
+        failed: 'We could not finish your brief. Please try again.',
+        retry: 'Try again',
+        fit: 'Fit',
+        visas: 'Your visa routes',
+        money: 'Money',
+        salary: 'Salary',
+        rent: '1-bedroom rent / year',
+        upfront: 'Upfront costs',
+        steps: 'Your path',
+        watchOut: 'Watch out',
+        questions: 'People like you also ask',
+        sources: 'Sources',
+        official: 'official',
+        years: 'yrs',
         family: {
-            single: "moving alone",
-            couple: "with partner",
-            family: "with kids",
+            single: 'moving alone',
+            couple: 'with partner',
+            family: 'with kids',
         },
         likelihood: {
-            likely: "Likely",
-            possible: "Possible",
-            unlikely: "Unlikely",
+            likely: 'Likely',
+            possible: 'Possible',
+            unlikely: 'Unlikely',
         },
         level: {
-            strong: "Strong fit",
-            good: "Good fit",
-            possible: "Possible fit",
-            challenging: "Challenging",
+            strong: 'Strong fit',
+            good: 'Good fit',
+            possible: 'Possible fit',
+            challenging: 'Challenging',
         },
         stage: {
-            explore: "Explore",
-            visit: "Visit",
-            move: "Move",
-            settle: "Settle",
-            build: "Build",
+            explore: 'Explore',
+            visit: 'Visit',
+            move: 'Move',
+            settle: 'Settle',
+            build: 'Build',
         },
-        newBrief: "New brief",
+        newBrief: 'New brief',
     },
     ar: {
-        loading: "نتحقق من المصادر الرسمية من أجلك…",
+        loading: 'نتحقق من المصادر الرسمية من أجلك…',
         loadingSteps: [
-            "قراءة شروط الإقامة الذهبية والخضراء",
-            "التحقق من تأشيرة البحث عن عمل",
-            "مقارنة الإيجارات والتكاليف الأولية",
-            "البحث عن عمليات الاحتيال التي تستهدف ملفك",
-            "كتابة ملخصك",
+            'قراءة شروط الإقامة الذهبية والخضراء',
+            'التحقق من تأشيرة البحث عن عمل',
+            'مقارنة الإيجارات والتكاليف الأولية',
+            'البحث عن عمليات الاحتيال التي تستهدف ملفك',
+            'كتابة ملخصك',
         ],
-        failed: "تعذّر إكمال الملخص. يرجى المحاولة مرة أخرى.",
-        retry: "حاول مجددًا",
-        fit: "الملاءمة",
-        visas: "مسارات التأشيرة",
-        money: "المال",
-        salary: "الراتب",
-        rent: "إيجار غرفة نوم واحدة / سنويًا",
-        upfront: "التكاليف الأولية",
-        steps: "مسارك",
-        watchOut: "انتبه",
-        questions: "أسئلة يطرحها أشخاص مثلك",
-        sources: "المصادر",
-        official: "رسمي",
-        years: "سنوات",
-        family: { single: "بمفردك", couple: "مع الشريك", family: "مع الأطفال" },
+        failed: 'تعذّر إكمال الملخص. يرجى المحاولة مرة أخرى.',
+        retry: 'حاول مجددًا',
+        fit: 'الملاءمة',
+        visas: 'مسارات التأشيرة',
+        money: 'المال',
+        salary: 'الراتب',
+        rent: 'إيجار غرفة نوم واحدة / سنويًا',
+        upfront: 'التكاليف الأولية',
+        steps: 'مسارك',
+        watchOut: 'انتبه',
+        questions: 'أسئلة يطرحها أشخاص مثلك',
+        sources: 'المصادر',
+        official: 'رسمي',
+        years: 'سنوات',
+        family: { single: 'بمفردك', couple: 'مع الشريك', family: 'مع الأطفال' },
         likelihood: {
-            likely: "مرجّح",
-            possible: "ممكن",
-            unlikely: "غير مرجّح",
+            likely: 'مرجّح',
+            possible: 'ممكن',
+            unlikely: 'غير مرجّح',
         },
         level: {
-            strong: "ملاءمة قوية",
-            good: "ملاءمة جيدة",
-            possible: "ملاءمة ممكنة",
-            challenging: "صعب",
+            strong: 'ملاءمة قوية',
+            good: 'ملاءمة جيدة',
+            possible: 'ملاءمة ممكنة',
+            challenging: 'صعب',
         },
         stage: {
-            explore: "استكشف",
-            visit: "زُر",
-            move: "انتقل",
-            settle: "استقر",
-            build: "ابنِ",
+            explore: 'استكشف',
+            visit: 'زُر',
+            move: 'انتقل',
+            settle: 'استقر',
+            build: 'ابنِ',
         },
-        newBrief: "ملخص جديد",
+        newBrief: 'ملخص جديد',
     },
 } as const;
 
 const t = computed(() => labels[props.brief.locale]);
 const c = computed(() => props.brief.content);
-const dir = computed(() => (props.brief.locale === "ar" ? "rtl" : "ltr"));
+const dir = computed(() => (props.brief.locale === 'ar' ? 'rtl' : 'ltr'));
 
 const stageIcons: Record<Stage, typeof Compass> = {
     explore: Compass,
@@ -129,35 +129,35 @@ const stageIcons: Record<Stage, typeof Compass> = {
 };
 
 const likelihoodClass = {
-    likely: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
+    likely: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
     possible:
-        "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
-    unlikely: "bg-muted text-muted-foreground",
+        'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
+    unlikely: 'bg-muted text-muted-foreground',
 };
 
 // Readable path for the sources list, e.g. "/en/visas/golden-visa".
 const sourcePath = (url: string) => {
     const { pathname } = new URL(url);
 
-    return pathname === "/"
-        ? ""
-        : decodeURIComponent(pathname).replace(/\/$/, "");
+    return pathname === '/'
+        ? ''
+        : decodeURIComponent(pathname).replace(/\/$/, '');
 };
 
 const loading = computed(() =>
-    ["pending", "generating"].includes(props.brief.status),
+    ['pending', 'generating'].includes(props.brief.status),
 );
 
 // Kick off generation, then poll as a fallback (e.g. page refreshed mid-generation).
 const http = useHttp(generate(props.brief.id), {});
 onMounted(() => {
-    if (props.brief.status === "pending") {
-        http.submit().finally(() => router.reload({ only: ["brief"] }));
+    if (props.brief.status === 'pending') {
+        http.submit().finally(() => router.reload({ only: ['brief'] }));
     }
 });
 const { stop } = usePoll(
     3000,
-    { only: ["brief"] },
+    { only: ['brief'] },
     { autoStart: loading.value },
 );
 

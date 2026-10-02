@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { BadgeCheck, ExternalLink } from "@lucide/vue";
-import { computed } from "vue";
-import type { Source } from "@/types/brief";
+import { BadgeCheck, ExternalLink } from '@lucide/vue';
+import { computed } from 'vue';
+import type { Source } from '@/types/brief';
 
 const props = defineProps<{
     url: string | null;

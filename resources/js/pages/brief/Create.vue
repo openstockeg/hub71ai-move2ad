@@ -1,69 +1,69 @@
 <script setup lang="ts">
-import { Form, Head } from "@inertiajs/vue3";
-import { BadgeCheck, ShieldAlert, Sparkles } from "@lucide/vue";
-import InputError from "@/components/InputError.vue";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
-import { store } from "@/routes/briefs";
+import { Form, Head } from '@inertiajs/vue3';
+import { BadgeCheck, ShieldAlert, Sparkles } from '@lucide/vue';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { store } from '@/routes/briefs';
 
 // Autofocus only on desktop: on phones it pops the keyboard and suggestion list over the hero.
-const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
 const professions = [
-    "Software engineer",
-    "Data scientist",
-    "AI / ML engineer",
-    "Registered nurse",
-    "Doctor",
-    "Teacher",
-    "Civil engineer",
-    "Electrical engineer",
-    "Accountant",
-    "Financial analyst",
-    "Marketing manager",
-    "Product manager",
-    "Architect",
-    "Pharmacist",
-    "Startup founder",
+    'Software engineer',
+    'Data scientist',
+    'AI / ML engineer',
+    'Registered nurse',
+    'Doctor',
+    'Teacher',
+    'Civil engineer',
+    'Electrical engineer',
+    'Accountant',
+    'Financial analyst',
+    'Marketing manager',
+    'Product manager',
+    'Architect',
+    'Pharmacist',
+    'Startup founder',
 ];
 
 const countries = [
-    "Egypt",
-    "India",
-    "Pakistan",
-    "Philippines",
-    "Jordan",
-    "Lebanon",
-    "Morocco",
-    "Tunisia",
-    "Nigeria",
-    "Kenya",
-    "United Kingdom",
-    "United States",
-    "Turkey",
-    "Brazil",
+    'Egypt',
+    'India',
+    'Pakistan',
+    'Philippines',
+    'Jordan',
+    'Lebanon',
+    'Morocco',
+    'Tunisia',
+    'Nigeria',
+    'Kenya',
+    'United Kingdom',
+    'United States',
+    'Turkey',
+    'Brazil',
 ];
 
 const families = [
-    { value: "single", label: "Just me" },
-    { value: "couple", label: "Couple" },
-    { value: "family", label: "Family" },
+    { value: 'single', label: 'Just me' },
+    { value: 'couple', label: 'Couple' },
+    { value: 'family', label: 'Family' },
 ];
 
 const locales = [
-    { value: "en", label: "English" },
-    { value: "ar", label: "العربية" },
+    { value: 'en', label: 'English' },
+    { value: 'ar', label: 'العربية' },
 ];
 
 const promises = [
     {
         icon: BadgeCheck,
-        text: "Answers link to official UAE and Abu Dhabi sources",
+        text: 'Answers link to official UAE and Abu Dhabi sources',
     },
-    { icon: Sparkles, text: "Personal to your profession, country and family" },
-    { icon: ShieldAlert, text: "Flags scams before they cost you money" },
+    { icon: Sparkles, text: 'Personal to your profession, country and family' },
+    { icon: ShieldAlert, text: 'Flags scams before they cost you money' },
 ];
 </script>
 
