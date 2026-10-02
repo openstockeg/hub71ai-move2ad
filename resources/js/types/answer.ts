@@ -4,6 +4,8 @@ type Point = { title: string; detail: string; source_url: string | null };
 
 export type AnswerContent = {
     on_topic: boolean;
+    public_question: string;
+    publishable: boolean;
     short_answer: { text: string; source_url: string | null };
     points: Point[];
     watch_out: Point | null;

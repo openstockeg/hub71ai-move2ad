@@ -130,19 +130,8 @@ watch(loading, (isLoading) => (isLoading ? start() : stop()), {
 </script>
 
 <template>
-    <Head :title="answer.question">
-        <meta
-            v-if="c"
-            head-key="description"
-            name="description"
-            :content="c.short_answer.text"
-        />
-        <meta
-            v-if="c && !c.on_topic"
-            name="robots"
-            content="noindex, nofollow"
-        />
-    </Head>
+    <!-- Description, Open Graph and robots tags are server-rendered (AnswerController::show). -->
+    <Head :title="answer.question" />
 
     <!-- grid-cols-1 (minmax(0, 1fr)) everywhere: long words/URLs must never widen the page. -->
     <div

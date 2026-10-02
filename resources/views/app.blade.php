@@ -1,5 +1,6 @@
+@php($locale = $page['props']['locale'] ?? $page['props']['brief']['locale'] ?? str_replace('_', '-', app()->getLocale()))
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"  @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+<html lang="{{ $locale }}" dir="{{ $locale === 'ar' ? 'rtl' : 'ltr' }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,7 +39,18 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            <title>{{ isset($meta['title']) ? $meta['title'].' - ' : '' }}{{ config('app.name', 'Laravel') }}</title>
+            @isset($meta)
+                <meta property="og:title" content="{{ $meta['title'] }}">
+                <meta property="og:site_name" content="{{ config('app.name') }}">
+                @if ($meta['description'])
+                    <meta name="description" content="{{ $meta['description'] }}">
+                    <meta property="og:description" content="{{ $meta['description'] }}">
+                @endif
+                @unless ($meta['indexable'])
+                    <meta name="robots" content="noindex, nofollow">
+                @endunless
+            @endisset
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

@@ -24,7 +24,10 @@ class AnswerController extends Controller
             'locale' => ['required', 'in:en,ar'],
         ]);
 
-        return to_route('answers.show', Answer::forQuestion($data['question'], $data['locale']));
+        // Answer in the language the question is written in, whichever page it was asked from.
+        $locale = preg_match('/\p{Arabic}/u', $data['question']) ? 'ar' : 'en';
+
+        return to_route('answers.show', Answer::forQuestion($data['question'], $locale));
     }
 
     /**
@@ -48,11 +51,14 @@ class AnswerController extends Controller
             ? Brief::FAILED
             : $answer->status;
 
+        // Once answered, only the cleaned question (no names, numbers or injected claims) is ever shown or sent.
+        $question = $answer->content['public_question'] ?? $answer->question;
+
         return Inertia::render('answer/Show', [
             'locale' => $answer->locale,
             'answer' => [
                 'id' => $answer->public_id,
-                'question' => $answer->question,
+                'question' => $question,
                 'locale' => $answer->locale,
                 'status' => $status,
                 'content' => $answer->content,
@@ -60,6 +66,11 @@ class AnswerController extends Controller
                 'asked_count' => $answer->asked_count,
                 'updated_at' => $answer->updated_at->toIso8601String(),
             ],
-        ]);
+        ])->withViewData(['meta' => [
+            // Server-rendered, so link previews (WhatsApp, LinkedIn) and crawlers see them without JavaScript.
+            'title' => $question,
+            'description' => $answer->content['short_answer']['text'] ?? null,
+            'indexable' => $status === Brief::READY && ($answer->content['publishable'] ?? false),
+        ]]);
     }
 }

@@ -137,7 +137,7 @@ test('the pasted message is fenced as untrusted data', function () {
 });
 
 test('ai endpoints are rate limited per ip', function () use ($message) {
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 60; $i++) {
         $this->post(route('checks.store'), ['message' => $message, 'locale' => 'en'])->assertRedirect();
     }
 

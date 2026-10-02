@@ -9,6 +9,8 @@ function fakeAnswerContent(): array
 {
     return [
         'on_topic' => true,
+        'public_question' => 'Can I look for a job in Abu Dhabi without a sponsor?',
+        'publishable' => true,
         'short_answer' => [
             'text' => 'Yes — a job-seeker visa lets you enter without a sponsor.',
             'source_url' => 'https://icp.gov.ae/en/job-seeker?utm_source=openai',
@@ -64,7 +66,7 @@ test('asking a question opens a public answer page that generates once', functio
         ->assertInertia(fn (Assert $page) => $page
             ->component('answer/Show')
             ->where('locale', 'en')
-            ->where('answer.question', $question)
+            ->where('answer.question', 'Can I look for a job in Abu Dhabi without a sponsor?')
             ->where('answer.status', 'ready')
             ->where('answer.content.short_answer.source_url', 'https://icp.gov.ae/en/job-seeker')
             ->where('answer.content.points.1.source_url', null)
@@ -74,7 +76,7 @@ test('asking a question opens a public answer page that generates once', functio
 test('the same question is answered once and shared', function () use ($question) {
     $this->post(route('answers.store'), ['question' => $question, 'locale' => 'en']);
     $this->post(route('answers.store'), ['question' => '  can i enter abu dhabi to look for a job   without a sponsor ', 'locale' => 'en']);
-    $this->post(route('answers.store'), ['question' => $question, 'locale' => 'ar']);
+    $this->post(route('answers.store'), ['question' => 'هل يمكنني البحث عن عمل في أبوظبي دون كفيل؟', 'locale' => 'ar']);
 
     expect(Answer::count())->toBe(2)
         ->and(Answer::where('locale', 'en')->sole()->asked_count)->toBe(2);
@@ -118,6 +120,38 @@ test('the question is fenced as untrusted data', function () {
     Http::assertSent(fn ($request) => substr_count($request['input'], '</question>') === 1
         && str_ends_with($request['input'], '</question>')
         && str_contains($request['instructions'], 'untrusted data'));
+});
+
+test('a question is answered in the language it is written in', function () {
+    $this->post(route('answers.store'), ['question' => 'هل أحتاج إلى معادلة شهادتي الجامعية؟', 'locale' => 'en']);
+    $this->post(route('answers.store'), ['question' => 'Do I need my degree attested?', 'locale' => 'ar']);
+
+    expect(Answer::orderBy('id')->pluck('locale')->all())->toBe(['ar', 'en']);
+});
+
+test('link previews and crawlers get the cleaned question without javascript', function () {
+    $answer = Answer::forQuestion('Is agent Ali on +971 50 123 4567 legit?', 'ar');
+
+    $this->get(route('answers.show', $answer))
+        ->assertSee('<html lang="ar" dir="rtl"', false)
+        ->assertSee('<meta name="robots" content="noindex, nofollow">', false);
+
+    $answer->forceFill(['status' => 'ready', 'content' => [...fakeAnswerContent(), 'public_question' => 'How can I check if a visa agent is legitimate?']])->save();
+
+    $this->get(route('answers.show', $answer))
+        ->assertSee('<title>How can I check if a visa agent is legitimate? - ', false)
+        ->assertSee('<meta property="og:description" content="Yes — a job-seeker visa', false)
+        ->assertDontSee('noindex', false)
+        ->assertDontSee('+971 50 123 4567')
+        ->assertDontSee('agent Ali');
+});
+
+test('unpublishable answers stay out of search engines', function () use ($question) {
+    $answer = Answer::forQuestion($question, 'en');
+    $answer->forceFill(['status' => 'ready', 'content' => [...fakeAnswerContent(), 'publishable' => false]])->save();
+
+    $this->get(route('answers.show', $answer))
+        ->assertSee('<meta name="robots" content="noindex, nofollow">', false);
 });
 
 test('question form validates input', function () {

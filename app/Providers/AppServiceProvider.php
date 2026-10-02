@@ -36,9 +36,11 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting(): void
     {
+        // Per-IP limits are generous: a whole venue (judges, demo audience) can share one Wi-Fi IP.
+        // The global daily cap is what bounds the OpenAI bill.
         RateLimiter::for('ai', fn (Request $request) => [
-            Limit::perMinute(20)->by('ai-minute|'.$request->ip()),
-            Limit::perDay(200)->by('ai-day|'.$request->ip()),
+            Limit::perMinute(60)->by('ai-minute|'.$request->ip()),
+            Limit::perDay(1000)->by('ai-day|'.$request->ip()),
             Limit::perDay(3000)->by('ai-day-global'),
         ]);
     }
