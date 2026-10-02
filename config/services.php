@@ -34,6 +34,7 @@ return [
         'model' => env('OPENAI_MODEL', 'gpt-5.6-terra'),
         'bulk_model' => env('OPENAI_BULK_MODEL', 'gpt-5.6-luna'),
         'timeout' => (int) env('OPENAI_TIMEOUT', 90),
+        'brief_effort' => env('OPENAI_BRIEF_EFFORT', 'low'),
     ],
 
     'slack' => [
