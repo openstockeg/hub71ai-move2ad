@@ -21,7 +21,7 @@ const labels = {
         example: 'Try an example',
         submit: 'Check this offer',
         privacy:
-            'Remove your name and phone number before pasting. Free · no account needed',
+            'Remove your name and phone number before pasting. Free, no account needed',
         rule: 'In the UAE, the employer pays for your visa. Anyone asking you for a "visa fee" is breaking the law.',
         ruleSource: 'Federal Decree-Law 33/2021',
         sample: `Congratulations! You have been selected for the position of Senior Software Engineer at Al Noor Petroleum, Abu Dhabi. Salary AED 45,000/month + free accommodation and flight. No interview needed.
@@ -35,7 +35,7 @@ Contact: alnoor.hr.recruitment@gmail.com / WhatsApp +971 55 123 4567`,
         placeholder: 'الصق عرض العمل هنا…',
         example: 'جرّب مثالًا',
         submit: 'افحص هذا العرض',
-        privacy: 'احذف اسمك ورقم هاتفك قبل اللصق. مجاني · بدون حساب',
+        privacy: 'احذف اسمك ورقم هاتفك قبل اللصق. مجاني، بدون حساب',
         rule: 'في الإمارات، صاحب العمل هو من يدفع تكاليف تأشيرتك. من يطلب منك "رسوم تأشيرة" يخالف القانون.',
         ruleSource: 'المرسوم بقانون اتحادي رقم 33 لسنة 2021',
         sample: `مبروك! تم اختيارك لوظيفة مهندس برمجيات أول في شركة النور للبترول – أبوظبي. الراتب 45,000 درهم شهريًا مع سكن وتذكرة طيران مجانية. لا حاجة لمقابلة.
@@ -61,7 +61,7 @@ const isDesktop = window.matchMedia('(min-width: 768px)').matches;
         >
             <div class="flex items-center justify-between gap-3">
                 <p
-                    class="flex items-center gap-2 text-xs font-medium tracking-wide text-brand uppercase md:text-sm"
+                    class="flex items-center gap-2 text-xs font-medium text-brand md:text-sm"
                 >
                     <ShieldAlert class="size-4" /> {{ t.eyebrow }}
                 </p>

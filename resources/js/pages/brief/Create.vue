@@ -122,23 +122,18 @@ const journey = [
                 class="mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[1fr_420px] md:gap-x-10 md:gap-y-8 md:py-20"
             >
                 <div class="flex flex-col justify-end">
-                    <p
-                        class="mb-2 text-xs font-medium tracking-wide text-brand uppercase md:mb-3 md:text-sm"
-                    >
-                        Thinking about Abu Dhabi?
-                    </p>
                     <h1
-                        class="text-3xl leading-tight font-semibold tracking-tight md:text-5xl"
+                        class="text-4xl leading-[1.05] font-semibold tracking-[-0.03em] text-balance md:text-6xl"
                     >
-                        The trusted answer to "can I move to Abu Dhabi?"
+                        Can I move to Abu Dhabi?
                     </h1>
                     <p
-                        class="mt-3 max-w-lg text-base text-muted-foreground md:mt-4 md:text-lg"
+                        class="mt-4 max-w-lg text-base text-pretty text-muted-foreground md:mt-6 md:text-lg"
                     >
-                        Tell us who you are. In under a minute you get a
-                        personal brief: which visa fits you, what life costs,
-                        the exact steps — and the scams to avoid. Sourced, not
-                        guessed.
+                        Get the trusted answer for you. Tell us who you are and
+                        in under a minute you get a personal brief: which visa
+                        fits, what life costs, the exact steps, and the scams to
+                        avoid. Every claim links to its official source.
                     </p>
                 </div>
 
@@ -262,7 +257,7 @@ const journey = [
                         Build my brief
                     </Button>
                     <p class="text-center text-xs text-muted-foreground">
-                        Free · no account needed
+                        Free, no account needed
                     </p>
                 </Form>
 
@@ -284,51 +279,45 @@ const journey = [
                             class="mt-1 inline-flex items-center gap-2 rounded-lg border border-destructive/30 bg-card px-3 py-2 text-sm font-medium hover:border-destructive/60"
                         >
                             <ShieldAlert class="size-4 text-destructive" />
-                            Already have a job offer? Check it for scams →
+                            Already have a job offer? Check it for scams
                         </Link>
                     </li>
                 </ul>
             </div>
         </section>
 
-        <section class="mx-auto max-w-5xl px-4 py-10 md:py-14">
-            <p
-                class="text-xs font-medium tracking-wide text-brand uppercase md:text-sm"
+        <section class="mx-auto max-w-5xl px-4 py-12 md:py-16">
+            <h2
+                class="max-w-xl text-2xl font-semibold tracking-tight text-balance md:text-3xl"
             >
-                One brief, the whole move
-            </p>
-            <h2 class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-                Every step, answered from official sources
+                One brief covers the whole move, from first question to staying
+                for good
             </h2>
-            <ol class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                <li v-for="(step, i) in journey" :key="step.stage">
-                    <component
-                        :is="step.href ? Link : 'div'"
-                        :href="step.href"
-                        class="flex h-full flex-col gap-2 rounded-xl border bg-card p-4"
-                        :class="step.href && 'transition hover:border-brand'"
+            <!-- A connected path: vertical on phones, horizontal on desktop. -->
+            <ol class="mt-8 grid gap-8 md:mt-10 lg:grid-cols-5 lg:gap-6">
+                <li
+                    v-for="step in journey"
+                    :key="step.stage"
+                    class="relative ps-12 before:absolute before:start-4 before:top-10 before:-bottom-6 before:w-0.5 before:bg-brand/25 last:before:hidden lg:ps-0 lg:pt-14 lg:before:start-11 lg:before:-end-4 lg:before:top-4 lg:before:bottom-auto lg:before:h-0.5 lg:before:w-auto"
+                >
+                    <span
+                        class="absolute start-0 top-0 flex size-8 items-center justify-center rounded-full bg-brand text-brand-foreground"
                     >
-                        <div class="flex items-center gap-2">
-                            <span
-                                class="flex size-8 items-center justify-center rounded-full bg-brand/10 text-brand"
-                            >
-                                <component :is="step.icon" class="size-4" />
-                            </span>
-                            <span
-                                class="text-xs font-medium tracking-wide text-muted-foreground uppercase"
-                                >{{ i + 1 }} · {{ step.stage }}</span
-                            >
-                        </div>
-                        <p class="font-medium">{{ step.title }}</p>
-                        <p class="text-sm text-muted-foreground">
-                            {{ step.text }}
-                        </p>
-                        <span
-                            v-if="step.href"
-                            class="mt-auto text-sm font-medium text-brand"
-                            >Check an offer →</span
-                        >
-                    </component>
+                        <component :is="step.icon" class="size-4" />
+                    </span>
+                    <p class="text-sm font-medium text-brand">
+                        {{ step.stage }}
+                    </p>
+                    <p class="mt-1 font-semibold">{{ step.title }}</p>
+                    <p class="mt-1 text-sm text-pretty text-muted-foreground">
+                        {{ step.text }}
+                    </p>
+                    <Link
+                        v-if="step.href"
+                        :href="step.href"
+                        class="mt-2 inline-block text-sm font-medium text-brand underline underline-offset-4 hover:no-underline"
+                        >Check a job offer</Link
+                    >
                 </li>
             </ol>
         </section>

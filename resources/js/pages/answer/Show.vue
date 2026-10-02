@@ -215,7 +215,7 @@ watch(loading, (isLoading) => (isLoading ? start() : stop()), {
         <article v-else class="grid grid-cols-1 gap-8 md:gap-10">
             <section class="rounded-xl border-2 border-brand/40 bg-sand p-5">
                 <h2
-                    class="flex items-center gap-2 text-xs font-semibold tracking-wide text-brand uppercase"
+                    class="flex items-center gap-2 text-xs font-semibold text-brand"
                 >
                     <Sparkles class="size-4" />{{ t.shortAnswer }}
                 </h2>

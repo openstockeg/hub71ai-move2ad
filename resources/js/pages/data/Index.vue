@@ -197,7 +197,7 @@ const formatDate = (date: string) =>
             <div class="mx-auto grid max-w-5xl gap-6 px-4 py-8 md:py-14">
                 <div class="flex items-center justify-between gap-3">
                     <p
-                        class="flex items-center gap-2 text-xs font-medium tracking-wide text-brand uppercase md:text-sm"
+                        class="flex items-center gap-2 text-xs font-medium text-brand md:text-sm"
                     >
                         <Database class="size-4" /> {{ t.eyebrow }}
                     </p>
@@ -298,9 +298,7 @@ const formatDate = (date: string) =>
 
                 <div class="mt-5 grid gap-6">
                     <div v-for="group in groups" :key="group.category">
-                        <h3
-                            class="text-sm font-medium tracking-wide text-muted-foreground uppercase"
-                        >
+                        <h3 class="text-sm font-medium text-muted-foreground">
                             {{ group.label }}
                             <span class="font-normal"
                                 >· {{ group.facts.length }}</span

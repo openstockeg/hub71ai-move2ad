@@ -346,19 +346,19 @@ watch(loading, (isLoading) => (isLoading ? start() : stop()), {
                     "
                 >
                     <div v-if="c.money.salary_range">
-                        <dt class="text-xs text-muted-foreground uppercase">
+                        <dt class="text-xs text-muted-foreground">
                             {{ t.salary }}
                         </dt>
                         <dd class="mt-1">{{ c.money.salary_range }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs text-muted-foreground uppercase">
+                        <dt class="text-xs text-muted-foreground">
                             {{ t.rent }}
                         </dt>
                         <dd class="mt-1">{{ c.money.rent_1br }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs text-muted-foreground uppercase">
+                        <dt class="text-xs text-muted-foreground">
                             {{ t.upfront }}
                         </dt>
                         <dd class="mt-1">{{ c.money.upfront_costs }}</dd>
@@ -387,9 +387,7 @@ watch(loading, (isLoading) => (isLoading ? start() : stop()), {
                                 class="size-3.5"
                             />
                         </span>
-                        <p
-                            class="text-xs font-medium tracking-wide text-brand uppercase"
-                        >
+                        <p class="text-xs font-medium text-brand">
                             {{ t.stage[step.stage] }}
                         </p>
                         <h3 class="font-semibold">{{ step.title }}</h3>

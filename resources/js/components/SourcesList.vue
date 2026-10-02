@@ -16,7 +16,7 @@ const sourcePath = (url: string) => {
 
 <template>
     <section v-if="sources.length">
-        <h2 class="mb-3 text-sm font-semibold text-muted-foreground uppercase">
+        <h2 class="mb-3 text-sm font-semibold text-muted-foreground">
             {{ title }}
         </h2>
         <ul class="grid grid-cols-1 gap-1 text-sm">
