@@ -64,17 +64,6 @@ class BriefController extends Controller
             ? Brief::FAILED
             : $brief->status;
 
-        $sources = collect($brief->content ?? [])
-            ->dot()
-            ->filter(fn ($value, $key) => str_ends_with($key, 'source_url') && filled($value))
-            ->unique()
-            ->values()
-            ->map(fn (string $url) => [
-                'url' => $url,
-                'host' => preg_replace('/^www\./', '', (string) parse_url($url, PHP_URL_HOST)),
-                'official' => $facts->isOfficial($url),
-            ]);
-
         return Inertia::render('brief/Show', [
             'brief' => [
                 'id' => $brief->public_id,
@@ -85,7 +74,7 @@ class BriefController extends Controller
                 'locale' => $brief->locale,
                 'status' => $status,
                 'content' => $brief->content,
-                'sources' => $sources,
+                'sources' => $facts->citedSources($brief->content),
                 'created_at' => $brief->created_at->toIso8601String(),
             ],
         ]);

@@ -63,6 +63,52 @@ class Facts
     }
 
     /**
+     * Strip tracking params from model-provided source URLs, and drop any URL
+     * that is neither a curated fact nor a web search result (i.e. made up).
+     *
+     * @param  array<string, mixed>  $content
+     * @param  array<int, string>  $searchUrls
+     * @return array<string, mixed>
+     */
+    public function keepKnownSources(array $content, array $searchUrls): array
+    {
+        $known = collect($this->facts())->pluck('source_url')
+            ->merge($searchUrls)
+            ->filter()
+            ->map(fn (string $url) => self::urlKey($url))
+            ->flip();
+
+        array_walk_recursive($content, function (&$value, $key) use ($known) {
+            if ($key === 'source_url' && is_string($value)) {
+                $value = $known->has(self::urlKey($value)) ? self::cleanUrl($value) : null;
+            }
+        });
+
+        return $content;
+    }
+
+    /**
+     * Sources cited in generated content, for display: unique, with host and official flag.
+     *
+     * @param  array<string, mixed>|null  $content
+     * @return array<int, array{url: string, host: string, official: bool}>
+     */
+    public function citedSources(?array $content): array
+    {
+        return collect($content ?? [])
+            ->dot()
+            ->filter(fn ($value, $key) => str_ends_with($key, 'source_url') && filled($value))
+            ->unique()
+            ->values()
+            ->map(fn (string $url) => [
+                'url' => $url,
+                'host' => preg_replace('/^www\./', '', (string) parse_url($url, PHP_URL_HOST)),
+                'official' => $this->isOfficial($url),
+            ])
+            ->all();
+    }
+
+    /**
      * Remove tracking parameters (utm_*, trk) from cited URLs.
      */
     public static function cleanUrl(string $url): string

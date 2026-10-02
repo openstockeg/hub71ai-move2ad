@@ -1,21 +1,30 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
+import { ShieldAlert } from '@lucide/vue';
 import { computed, watchEffect } from 'vue';
 import { dashboard, home, login } from '@/routes';
+import checks from '@/routes/checks';
 
-const page = usePage<{ brief?: { locale: 'en' | 'ar' } }>();
+const page = usePage<{
+    locale?: 'en' | 'ar';
+    brief?: { locale: 'en' | 'ar' };
+}>();
 
 // Pages with Arabic content flip the whole chrome (header, footer, scrollbar side) to RTL.
-const locale = computed(() => page.props.brief?.locale ?? 'en');
+const locale = computed(
+    () => page.props.locale ?? page.props.brief?.locale ?? 'en',
+);
 
 const labels = {
     en: {
+        check: 'Check a job offer',
         journey: 'My journey',
         login: 'Log in',
         disclaimer:
             'Move2AD is an independent guide, not a government service. Answers are grounded in official UAE and Abu Dhabi sources — always confirm on the linked page before you act.',
     },
     ar: {
+        check: 'افحص عرض عمل',
         journey: 'رحلتي',
         login: 'تسجيل الدخول',
         disclaimer:
@@ -51,6 +60,11 @@ watchEffect(() => {
                     Move2AD
                 </Link>
                 <div class="flex items-center gap-4 text-sm">
+                    <Link
+                        :href="checks.create({ query: { lang: locale } })"
+                        class="flex items-center gap-1.5 font-medium text-brand hover:underline"
+                        ><ShieldAlert class="size-4" />{{ t.check }}</Link
+                    >
                     <Link
                         v-if="$page.props.auth.user"
                         :href="dashboard()"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { BadgeCheck, ShieldAlert, Sparkles } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/briefs';
+import checks from '@/routes/checks';
 
 // Autofocus only on desktop: on phones it pops the keyboard and suggestion list over the hero.
 const isDesktop = window.matchMedia('(min-width: 768px)').matches;
@@ -224,6 +225,15 @@ const promises = [
                         class="size-5 shrink-0 text-brand"
                     />
                     {{ promise.text }}
+                </li>
+                <li>
+                    <Link
+                        :href="checks.create()"
+                        class="mt-1 inline-flex items-center gap-2 rounded-lg border border-destructive/30 bg-card px-3 py-2 text-sm font-medium hover:border-destructive/60"
+                    >
+                        <ShieldAlert class="size-4 text-destructive" />
+                        Already have a job offer? Check it for scams →
+                    </Link>
                 </li>
             </ul>
         </div>

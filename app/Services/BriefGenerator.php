@@ -41,7 +41,7 @@ class BriefGenerator
         $content = json_decode(ResponsesClient::text($response), true, flags: JSON_THROW_ON_ERROR);
 
         return [
-            'content' => $this->cleanSources($content, ResponsesClient::searchUrls($response)),
+            'content' => $this->facts->keepKnownSources($content, ResponsesClient::searchUrls($response)),
             'model' => $response['model'] ?? null,
         ];
     }
@@ -85,31 +85,6 @@ class BriefGenerator
 
         return "Profile: {$profile['profession']} from {$profile['country']}, {$profile['experience_years']} years of experience, {$family}. "
             .'They are still in their home country and want to know if and how to move to Abu Dhabi.';
-    }
-
-    /**
-     * Strip tracking params from model-provided source URLs, and drop any URL
-     * that is neither a curated fact nor a web search result (i.e. made up).
-     *
-     * @param  array<string, mixed>  $content
-     * @param  array<int, string>  $searchUrls
-     * @return array<string, mixed>
-     */
-    protected function cleanSources(array $content, array $searchUrls): array
-    {
-        $known = collect($this->facts->facts())->pluck('source_url')
-            ->merge($searchUrls)
-            ->filter()
-            ->map(fn (string $url) => Facts::urlKey($url))
-            ->flip();
-
-        array_walk_recursive($content, function (&$value, $key) use ($known) {
-            if ($key === 'source_url' && is_string($value)) {
-                $value = $known->has(Facts::urlKey($value)) ? Facts::cleanUrl($value) : null;
-            }
-        });
-
-        return $content;
     }
 
     /**
