@@ -1,15 +1,49 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { dashboard, home, login } from '@/routes';
+import { Link, usePage } from "@inertiajs/vue3";
+import { computed, watchEffect } from "vue";
+import { dashboard, home, login } from "@/routes";
+
+const page = usePage<{ brief?: { locale: "en" | "ar" } }>();
+
+// Pages with Arabic content flip the whole chrome (header, footer, scrollbar side) to RTL.
+const locale = computed(() => page.props.brief?.locale ?? "en");
+
+const labels = {
+    en: {
+        journey: "My journey",
+        login: "Log in",
+        disclaimer:
+            "Move2AD is an independent guide, not a government service. Answers are grounded in official UAE and Abu Dhabi sources — always confirm on the linked page before you act.",
+    },
+    ar: {
+        journey: "رحلتي",
+        login: "تسجيل الدخول",
+        disclaimer:
+            "Move2AD دليل مستقل وليس خدمة حكومية. تستند الإجابات إلى مصادر رسمية في الإمارات وأبوظبي — تأكد دائمًا من الصفحة المرتبطة قبل اتخاذ أي إجراء.",
+    },
+} as const;
+
+const t = computed(() => labels[locale.value]);
+
+watchEffect(() => {
+    document.documentElement.lang = locale.value;
+    document.documentElement.dir = locale.value === "ar" ? "rtl" : "ltr";
+});
 </script>
 
 <template>
-    <div class="flex min-h-screen flex-col bg-background text-foreground">
+    <div
+        class="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground"
+    >
         <header class="border-b">
             <nav
                 class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4"
             >
-                <Link :href="home()" class="flex items-center gap-2 font-semibold">
+                <Link
+                    :href="home()"
+                    dir="ltr"
+                    class="flex items-center gap-2 font-semibold"
+                >
                     <span
                         class="flex size-7 items-center justify-center rounded-md bg-brand text-xs font-bold text-brand-foreground"
                         >M2</span
@@ -21,13 +55,13 @@ import { dashboard, home, login } from '@/routes';
                         v-if="$page.props.auth.user"
                         :href="dashboard()"
                         class="text-muted-foreground hover:text-foreground"
-                        >My journey</Link
+                        >{{ t.journey }}</Link
                     >
                     <Link
                         v-else
                         :href="login()"
                         class="text-muted-foreground hover:text-foreground"
-                        >Log in</Link
+                        >{{ t.login }}</Link
                     >
                 </div>
             </nav>
@@ -41,9 +75,7 @@ import { dashboard, home, login } from '@/routes';
             <div
                 class="mx-auto max-w-5xl px-4 py-6 text-xs text-muted-foreground"
             >
-                Move2AD is an independent guide, not a government service.
-                Answers are grounded in official UAE and Abu Dhabi sources —
-                always confirm on the linked page before you act.
+                {{ t.disclaimer }}
             </div>
         </footer>
     </div>

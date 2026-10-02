@@ -1,66 +1,69 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import { BadgeCheck, ShieldAlert, Sparkles } from '@lucide/vue';
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { store } from '@/routes/briefs';
+import { Form, Head } from "@inertiajs/vue3";
+import { BadgeCheck, ShieldAlert, Sparkles } from "@lucide/vue";
+import InputError from "@/components/InputError.vue";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { store } from "@/routes/briefs";
+
+// Autofocus only on desktop: on phones it pops the keyboard and suggestion list over the hero.
+const isDesktop = window.matchMedia("(min-width: 768px)").matches;
 
 const professions = [
-    'Software engineer',
-    'Data scientist',
-    'AI / ML engineer',
-    'Registered nurse',
-    'Doctor',
-    'Teacher',
-    'Civil engineer',
-    'Electrical engineer',
-    'Accountant',
-    'Financial analyst',
-    'Marketing manager',
-    'Product manager',
-    'Architect',
-    'Pharmacist',
-    'Startup founder',
+    "Software engineer",
+    "Data scientist",
+    "AI / ML engineer",
+    "Registered nurse",
+    "Doctor",
+    "Teacher",
+    "Civil engineer",
+    "Electrical engineer",
+    "Accountant",
+    "Financial analyst",
+    "Marketing manager",
+    "Product manager",
+    "Architect",
+    "Pharmacist",
+    "Startup founder",
 ];
 
 const countries = [
-    'Egypt',
-    'India',
-    'Pakistan',
-    'Philippines',
-    'Jordan',
-    'Lebanon',
-    'Morocco',
-    'Tunisia',
-    'Nigeria',
-    'Kenya',
-    'United Kingdom',
-    'United States',
-    'Turkey',
-    'Brazil',
+    "Egypt",
+    "India",
+    "Pakistan",
+    "Philippines",
+    "Jordan",
+    "Lebanon",
+    "Morocco",
+    "Tunisia",
+    "Nigeria",
+    "Kenya",
+    "United Kingdom",
+    "United States",
+    "Turkey",
+    "Brazil",
 ];
 
 const families = [
-    { value: 'single', label: 'Just me' },
-    { value: 'couple', label: 'With partner' },
-    { value: 'family', label: 'With kids' },
+    { value: "single", label: "Just me" },
+    { value: "couple", label: "Couple" },
+    { value: "family", label: "Family" },
 ];
 
 const locales = [
-    { value: 'en', label: 'English' },
-    { value: 'ar', label: 'العربية' },
+    { value: "en", label: "English" },
+    { value: "ar", label: "العربية" },
 ];
 
 const promises = [
     {
         icon: BadgeCheck,
-        text: 'Answers link to official UAE and Abu Dhabi sources',
+        text: "Answers link to official UAE and Abu Dhabi sources",
     },
-    { icon: Sparkles, text: 'Personal to your profession, country and family' },
-    { icon: ShieldAlert, text: 'Flags scams before they cost you money' },
+    { icon: Sparkles, text: "Personal to your profession, country and family" },
+    { icon: ShieldAlert, text: "Flags scams before they cost you money" },
 ];
 </script>
 
@@ -68,44 +71,34 @@ const promises = [
     <Head title="Your move to Abu Dhabi, answered" />
 
     <section class="bg-sand">
+        <!-- Mobile order: intro → form → promises. Desktop: intro + promises left, form right. -->
         <div
-            class="mx-auto grid max-w-5xl gap-10 px-4 py-12 md:grid-cols-[1fr_420px] md:py-20"
+            class="mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[1fr_420px] md:gap-x-10 md:gap-y-8 md:py-20"
         >
-            <div class="flex flex-col justify-center">
+            <div class="flex flex-col justify-end">
                 <p
-                    class="mb-3 text-sm font-medium tracking-wide text-brand uppercase"
+                    class="mb-2 text-xs font-medium tracking-wide text-brand uppercase md:mb-3 md:text-sm"
                 >
                     Thinking about Abu Dhabi?
                 </p>
                 <h1
-                    class="text-4xl leading-tight font-semibold tracking-tight md:text-5xl"
+                    class="text-3xl leading-tight font-semibold tracking-tight md:text-5xl"
                 >
                     The trusted answer to "can I move to Abu Dhabi?"
                 </h1>
-                <p class="mt-4 max-w-lg text-lg text-muted-foreground">
+                <p
+                    class="mt-3 max-w-lg text-base text-muted-foreground md:mt-4 md:text-lg"
+                >
                     Tell us who you are. In under a minute you get a personal
-                    brief: which visa fits you, what life costs, the exact
-                    steps — and the scams to avoid. Sourced, not guessed.
+                    brief: which visa fits you, what life costs, the exact steps
+                    — and the scams to avoid. Sourced, not guessed.
                 </p>
-                <ul class="mt-8 grid gap-3">
-                    <li
-                        v-for="promise in promises"
-                        :key="promise.text"
-                        class="flex items-center gap-3 text-sm"
-                    >
-                        <component
-                            :is="promise.icon"
-                            class="size-5 shrink-0 text-brand"
-                        />
-                        {{ promise.text }}
-                    </li>
-                </ul>
             </div>
 
             <Form
                 v-bind="store.form()"
                 v-slot="{ errors, processing }"
-                class="grid gap-5 rounded-xl border bg-card p-6 shadow-sm"
+                class="grid gap-5 rounded-xl border bg-card p-5 shadow-sm md:col-start-2 md:row-span-2 md:row-start-1 md:self-center md:p-6"
             >
                 <h2 class="text-lg font-semibold">Get your Abu Dhabi brief</h2>
 
@@ -117,8 +110,8 @@ const promises = [
                         list="professions"
                         autocomplete="off"
                         required
-                        v-focus
-                        placeholder="e.g. Software engineer, nurse, teacher"
+                        v-focus="isDesktop"
+                        placeholder="e.g. Software engineer, nurse"
                     />
                     <datalist id="professions">
                         <option v-for="p in professions" :key="p" :value="p" />
@@ -138,7 +131,11 @@ const promises = [
                             placeholder="e.g. Egypt"
                         />
                         <datalist id="countries">
-                            <option v-for="c in countries" :key="c" :value="c" />
+                            <option
+                                v-for="c in countries"
+                                :key="c"
+                                :value="c"
+                            />
                         </datalist>
                         <InputError :message="errors.country" />
                     </div>
@@ -215,6 +212,20 @@ const promises = [
                     Free · no account needed
                 </p>
             </Form>
+
+            <ul class="grid gap-3 self-start">
+                <li
+                    v-for="promise in promises"
+                    :key="promise.text"
+                    class="flex items-center gap-3 text-sm"
+                >
+                    <component
+                        :is="promise.icon"
+                        class="size-5 shrink-0 text-brand"
+                    />
+                    {{ promise.text }}
+                </li>
+            </ul>
         </div>
     </section>
 </template>
