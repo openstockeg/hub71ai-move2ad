@@ -14,7 +14,7 @@ void createInertiaApp({
         switch (true) {
             case name === 'Welcome':
                 return null;
-            case ['brief/', 'check/', 'answer/'].some((prefix) =>
+            case ['brief/', 'check/', 'answer/', 'data/'].some((prefix) =>
                 name.startsWith(prefix),
             ):
                 return PublicLayout;

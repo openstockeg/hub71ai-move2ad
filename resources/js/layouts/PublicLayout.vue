@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { ShieldAlert } from '@lucide/vue';
+import { Database, ShieldAlert } from '@lucide/vue';
 import { computed, watchEffect } from 'vue';
-import { dashboard, home, login } from '@/routes';
+import { dashboard, data, home, login } from '@/routes';
 import checks from '@/routes/checks';
 
 const page = usePage<{
@@ -20,6 +20,7 @@ const labels = {
         check: 'Check a job offer',
         journey: 'My journey',
         login: 'Log in',
+        data: 'Our data & sources',
         disclaimer:
             'Move2AD is an independent guide, not a government service. Answers are grounded in official UAE and Abu Dhabi sources — always confirm on the linked page before you act.',
     },
@@ -27,6 +28,7 @@ const labels = {
         check: 'افحص عرض عمل',
         journey: 'رحلتي',
         login: 'تسجيل الدخول',
+        data: 'بياناتنا ومصادرنا',
         disclaimer:
             'Move2AD دليل مستقل وليس خدمة حكومية. تستند الإجابات إلى مصادر رسمية في الإمارات وأبوظبي — تأكد دائمًا من الصفحة المرتبطة قبل اتخاذ أي إجراء.',
     },
@@ -61,6 +63,11 @@ watchEffect(() => {
                 </Link>
                 <div class="flex items-center gap-4 text-sm">
                     <Link
+                        :href="data()"
+                        class="hidden text-muted-foreground hover:text-foreground sm:inline"
+                        >{{ t.data }}</Link
+                    >
+                    <Link
                         :href="checks.create({ query: { lang: locale } })"
                         class="flex items-center gap-1.5 font-medium text-brand hover:underline"
                         ><ShieldAlert class="size-4" />{{ t.check }}</Link
@@ -87,9 +94,14 @@ watchEffect(() => {
 
         <footer class="border-t">
             <div
-                class="mx-auto max-w-5xl px-4 py-6 text-xs text-muted-foreground"
+                class="mx-auto grid max-w-5xl gap-2 px-4 py-6 text-xs text-muted-foreground"
             >
-                {{ t.disclaimer }}
+                <p>{{ t.disclaimer }}</p>
+                <Link
+                    :href="data()"
+                    class="flex w-fit items-center gap-1.5 font-medium text-brand hover:underline"
+                    ><Database class="size-3.5" />{{ t.data }}</Link
+                >
             </div>
         </footer>
     </div>

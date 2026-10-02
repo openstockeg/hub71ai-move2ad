@@ -52,7 +52,9 @@ Each fact carries:
 - whether that source is `official` or `secondary`
 - a `needs_verification` flag where numbers are only reported, not official
 
-These facts are the model's ground truth, and every brief and scam check builds on them.
+These facts are the model's ground truth, and every brief, answer and scam check builds on them. You can browse the whole dataset, its sources and the allowed official domains on the live site at **`/data`**.
+
+Answer pages are published for search engines and AI assistants through `/sitemap.xml` and `/llms.txt`. Only answers marked safe to publish are listed (no personal details, no injected claims).
 
 ## Safety by design
 

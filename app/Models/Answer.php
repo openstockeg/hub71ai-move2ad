@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\AnswerGenerator;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -77,6 +78,31 @@ class Answer extends Model
         }
 
         return $answer;
+    }
+
+    /**
+     * Ready answers whose question is safe to list publicly (sitemap, data page), most asked first.
+     * Filtered in PHP: JSON boolean comparisons differ between SQLite and Postgres.
+     *
+     * @return Collection<int, self>
+     */
+    public static function published(): Collection
+    {
+        return self::where('status', Brief::READY)
+            ->orderByDesc('asked_count')
+            ->latest('updated_at')
+            ->limit(5000)
+            ->get()
+            ->filter(fn (self $answer) => ($answer->content['publishable'] ?? false) === true)
+            ->values();
+    }
+
+    /**
+     * The cleaned question shown publicly once answered.
+     */
+    public function publicQuestion(): string
+    {
+        return $this->content['public_question'] ?? $this->question;
     }
 
     /**

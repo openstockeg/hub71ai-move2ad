@@ -52,7 +52,7 @@ class AnswerController extends Controller
             : $answer->status;
 
         // Once answered, only the cleaned question (no names, numbers or injected claims) is ever shown or sent.
-        $question = $answer->content['public_question'] ?? $answer->question;
+        $question = $answer->publicQuestion();
 
         return Inertia::render('answer/Show', [
             'locale' => $answer->locale,

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\BriefController;
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\ScamCheckController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,11 @@ Route::post('check/{check}/run', [ScamCheckController::class, 'run'])->middlewar
 Route::post('q', [AnswerController::class, 'store'])->middleware('throttle:ai')->name('answers.store');
 Route::get('q/{answer}', [AnswerController::class, 'show'])->name('answers.show');
 Route::post('q/{answer}/generate', [AnswerController::class, 'generate'])->middleware('throttle:ai')->name('answers.generate');
+
+Route::get('data', [DataController::class, 'index'])->name('data');
+Route::get('sitemap.xml', [DataController::class, 'sitemap'])->name('sitemap');
+Route::get('llms.txt', [DataController::class, 'llms'])->name('llms');
+Route::get('robots.txt', [DataController::class, 'robots'])->name('robots');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
