@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Facts;
 use App\Services\OpenAI\ResponsesClient;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -23,13 +24,12 @@ class OpenAIPing extends Command
         $this->info('Model '.($response['model'] ?? '?').': '.ResponsesClient::text($response));
 
         if ($this->option('search')) {
-            $facts = json_decode(file_get_contents(database_path('data/facts.json')), true);
 
             $response = $client->create([
                 'input' => 'What is the minimum monthly salary for the Abu Dhabi Golden Visa for skilled professionals? One sentence.',
                 'tools' => [[
                     'type' => 'web_search',
-                    'filters' => ['allowed_domains' => $facts['allowed_domains']],
+                    'filters' => ['allowed_domains' => app(Facts::class)->allowedDomains()],
                 ]],
             ]);
 

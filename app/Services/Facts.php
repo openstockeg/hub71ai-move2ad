@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
 /**
  * Curated grounding facts (database/data/facts.json).
  */
@@ -15,7 +18,7 @@ class Facts
      */
     public function all(): array
     {
-        return $this->data ??= json_decode(file_get_contents(database_path('data/facts.json')), true, flags: JSON_THROW_ON_ERROR);
+        return $this->data ??= File::json(database_path('data/facts.json'), JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -47,7 +50,7 @@ class Facts
                 'source_type' => $fact['source_type'],
                 'needs_verification' => $fact['needs_verification'] ?? null,
             ], fn ($value) => $value !== null))->all(),
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         );
     }
 
@@ -122,7 +125,7 @@ class Facts
         parse_str($parts['query'], $query);
         $query = array_filter($query, fn ($key) => ! str_starts_with((string) $key, 'utm_') && $key !== 'trk', ARRAY_FILTER_USE_KEY);
 
-        $base = strtok($url, '?');
+        $base = Str::before($url, '?');
 
         return $query ? $base.'?'.http_build_query($query) : $base;
     }

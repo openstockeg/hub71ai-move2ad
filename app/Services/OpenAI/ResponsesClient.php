@@ -35,9 +35,9 @@ class ResponsesClient
      */
     public static function text(array $response): string
     {
-        return collect($response['output'] ?? [])
+        return collect(self::items($response['output'] ?? null))
             ->where('type', 'message')
-            ->flatMap(fn (array $message) => $message['content'] ?? [])
+            ->flatMap(fn (array $message) => self::items($message['content'] ?? null))
             ->where('type', 'output_text')
             ->pluck('text')
             ->implode('');
@@ -51,10 +51,10 @@ class ResponsesClient
      */
     public static function citations(array $response): array
     {
-        return collect($response['output'] ?? [])
+        return collect(self::items($response['output'] ?? null))
             ->where('type', 'message')
-            ->flatMap(fn (array $message) => $message['content'] ?? [])
-            ->flatMap(fn (array $part) => $part['annotations'] ?? [])
+            ->flatMap(fn (array $message) => self::items($message['content'] ?? null))
+            ->flatMap(fn (array $part) => self::items($part['annotations'] ?? null))
             ->where('type', 'url_citation')
             ->map(fn (array $a) => ['url' => $a['url'], 'title' => $a['title'] ?? null])
             ->unique('url')
@@ -71,16 +71,26 @@ class ResponsesClient
      */
     public static function searchUrls(array $response): array
     {
-        return collect($response['output'] ?? [])
+        return collect(self::items($response['output'] ?? null))
             ->where('type', 'web_search_call')
             ->flatMap(fn (array $call) => [
                 $call['action']['url'] ?? null,
-                ...collect($call['action']['sources'] ?? [])->pluck('url'),
+                ...array_column(self::items($call['action']['sources'] ?? null), 'url'),
             ])
-            ->filter()
+            ->filter(fn ($url) => is_string($url) && $url !== '')
             ->unique()
             ->values()
             ->all();
+    }
+
+    /**
+     * The array items of a list from the decoded response; anything else (missing, malformed) is skipped.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected static function items(mixed $list): array
+    {
+        return is_array($list) ? array_values(array_filter($list, is_array(...))) : [];
     }
 
     protected function http(): PendingRequest

@@ -1,7 +1,10 @@
 import type { Source } from '@/types/brief';
 
 export type Verdict =
-    'likely_scam' | 'suspicious' | 'no_red_flags_found' | 'not_a_job_offer';
+    | 'likely_scam'
+    | 'suspicious'
+    | 'no_red_flags_found'
+    | 'not_a_job_offer';
 
 export type CheckContent = {
     verdict: Verdict;

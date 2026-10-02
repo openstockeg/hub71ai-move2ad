@@ -9,21 +9,22 @@ Built for the Hub71+ AI Hackathon, 2 October 2026.
 ## What you can do
 
 1. **Get your Abu Dhabi brief** (`/`): enter your profession, country, years of experience and who is moving with you. In about 30 seconds you get:
-   - your fit for Abu Dhabi
-   - the visa routes that apply to you, and how likely each one is
-   - rent and upfront costs
-   - step-by-step path: Explore → Visit → Move → Settle → Build
-   - the scams to watch for
+    - your fit for Abu Dhabi
+    - the visa routes that apply to you, and how likely each one is
+    - rent and upfront costs
+    - step-by-step path: Explore → Visit → Move → Settle → Build
+    - the scams to watch for
 
-   Every claim links to its source, and official sources are marked.
+    Every claim links to its source, and official sources are marked.
+
 2. **Ask the next question** (`/q/…`): click any "People like you also ask" question in your brief, or type your own. Each question becomes a public, sourced answer page with a short answer, key details, a scam warning and related questions you can click next. Every question becomes a findable, sourced page for the next person who searches for it, and a question that was already asked opens instantly instead of calling the model again.
 3. **Check a job offer** (`/check`): paste a WhatsApp message, email or LinkedIn offer. You get:
-   - a verdict
-   - every red flag, with the exact phrase highlighted inside the message
-   - the law or official warning behind each red flag
-   - what to do next, including MOHRE's official lookup to verify a job offer
+    - a verdict
+    - every red flag, with the exact phrase highlighted inside the message
+    - the law or official warning behind each red flag
+    - what to do next, including MOHRE's official lookup to verify a job offer
 
-   Try **"Try an example"** for a typical "refundable visa fee" scam.
+    Try **"Try an example"** for a typical "refundable visa fee" scam.
 
 All of it works fully in Arabic, with the layout mirrored for right-to-left reading.
 
