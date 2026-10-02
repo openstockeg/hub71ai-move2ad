@@ -5,15 +5,15 @@ import {
     Banknote,
     BadgeCheck,
     Compass,
-    ExternalLink,
-    MessageCircleQuestion,
     Plane,
     Rocket,
     Home,
     Luggage,
 } from '@lucide/vue';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import QuestionList from '@/components/QuestionList.vue';
 import SourceLink from '@/components/SourceLink.vue';
+import SourcesList from '@/components/SourcesList.vue';
 import { Skeleton } from '@/components/ui/skeleton';
 import { home } from '@/routes';
 import { generate } from '@/routes/briefs';
@@ -133,15 +133,6 @@ const likelihoodClass = {
     possible:
         'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
     unlikely: 'bg-muted text-muted-foreground',
-};
-
-// Readable path for the sources list, e.g. "/en/visas/golden-visa".
-const sourcePath = (url: string) => {
-    const { pathname } = new URL(url);
-
-    return pathname === '/'
-        ? ''
-        : decodeURIComponent(pathname).replace(/\/$/, '');
 };
 
 const retrying = ref(false);
@@ -439,59 +430,13 @@ watch(loading, (isLoading) => (isLoading ? start() : stop()), {
                 </div>
             </section>
 
-            <section>
-                <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
-                    <MessageCircleQuestion class="size-5 text-brand" />{{
-                        t.questions
-                    }}
-                </h2>
-                <ul class="grid grid-cols-1 gap-2">
-                    <li
-                        v-for="question in c.suggested_questions"
-                        :key="question"
-                        class="rounded-lg border bg-card px-4 py-3 text-sm"
-                    >
-                        {{ question }}
-                    </li>
-                </ul>
-            </section>
+            <QuestionList
+                :title="t.questions"
+                :questions="c.suggested_questions"
+                :locale="brief.locale"
+            />
 
-            <section>
-                <h2
-                    class="mb-3 text-sm font-semibold text-muted-foreground uppercase"
-                >
-                    {{ t.sources }}
-                </h2>
-                <ul class="grid grid-cols-1 gap-1 text-sm">
-                    <li v-for="source in brief.sources" :key="source.url">
-                        <a
-                            :href="source.url"
-                            target="_blank"
-                            rel="noopener"
-                            class="group flex min-w-0 items-center gap-2 py-1.5"
-                            :title="source.url"
-                        >
-                            <BadgeCheck
-                                v-if="source.official"
-                                class="size-4 shrink-0 text-brand"
-                            />
-                            <ExternalLink
-                                v-else
-                                class="size-4 shrink-0 text-muted-foreground"
-                            />
-                            <span dir="ltr" class="min-w-0 truncate">
-                                <span
-                                    class="font-medium group-hover:underline"
-                                    >{{ source.host }}</span
-                                >
-                                <span class="text-muted-foreground">{{
-                                    sourcePath(source.url)
-                                }}</span>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
+            <SourcesList :title="t.sources" :sources="brief.sources" />
         </article>
     </div>
 </template>

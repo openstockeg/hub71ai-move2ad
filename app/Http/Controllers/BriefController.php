@@ -62,7 +62,7 @@ class BriefController extends Controller
      */
     public static function claim(Model $record): bool
     {
-        return (bool) $record->newQuery()
+        $claimed = (bool) $record->newQuery()
             ->whereKey($record->getKey())
             ->where(fn (Builder $query) => $query
                 ->whereIn('status', [Brief::PENDING, Brief::FAILED])
@@ -70,6 +70,13 @@ class BriefController extends Controller
                     ->where('status', Brief::GENERATING)
                     ->where('updated_at', '<', now()->subSeconds(self::STALE_AFTER))))
             ->update(['status' => Brief::GENERATING]);
+
+        if ($claimed) {
+            // Keep the in-memory model in sync, or a retry that fails again would not save "failed".
+            $record->forceFill(['status' => Brief::GENERATING])->syncOriginalAttribute('status');
+        }
+
+        return $claimed;
     }
 
     public function show(Brief $brief, Facts $facts): Response

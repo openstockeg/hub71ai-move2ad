@@ -14,7 +14,9 @@ void createInertiaApp({
         switch (true) {
             case name === 'Welcome':
                 return null;
-            case name.startsWith('brief/') || name.startsWith('check/'):
+            case ['brief/', 'check/', 'answer/'].some((prefix) =>
+                name.startsWith(prefix),
+            ):
                 return PublicLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
