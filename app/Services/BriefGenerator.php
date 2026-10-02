@@ -61,7 +61,8 @@ class BriefGenerator
         - Be honest about fit: if a visa route is unlikely for this profile, say so and why.
         - Be concrete and practical, answer-first, no marketing language. Keep each detail to 1-2 sentences.
         - Always include at least one scam warning: in the UAE the employer pays all visa/recruitment costs (Federal Decree-Law 33/2021).
-        - suggested_questions: 4 specific follow-up questions this person is likely to ask next.
+        - suggested_questions: 4 specific follow-up questions this person is likely to ask next. Write them complete and ready to ask — never use placeholders like [field] or [title].
+        - If the profession is unclear or not a real profession, say so briefly in fit.reason and give general guidance for skilled professionals.
         - Write all text in {$language}. Keep URLs, numbers and AED amounts as-is.
 
         FACTS:
@@ -137,8 +138,8 @@ class BriefGenerator
                 'source_url' => $source,
             ]),
             'money' => $object([
-                'salary_range' => ['type' => ['string', 'null']],
-                'rent_1br' => ['type' => 'string'],
+                'salary_range' => ['type' => ['string', 'null'], 'description' => 'Sourced salary range, or null. Put salary caveats in note.'],
+                'rent_1br' => ['type' => 'string', 'description' => 'Rent figures only — no salary information.'],
                 'upfront_costs' => ['type' => 'string'],
                 'note' => ['type' => 'string'],
                 'source_url' => $source,

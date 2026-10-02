@@ -196,7 +196,7 @@ onUnmounted(() => clearInterval(ticker));
 
             <section>
                 <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold"><Banknote class="size-5 text-brand" />{{ t.money }}</h2>
-                <dl class="grid gap-3 rounded-xl border bg-card p-4 text-sm md:grid-cols-3">
+                <dl class="grid gap-4 rounded-xl border bg-card p-4 text-sm" :class="c.money.salary_range ? 'md:grid-cols-3' : 'md:grid-cols-2'">
                     <div v-if="c.money.salary_range">
                         <dt class="text-xs text-muted-foreground uppercase">{{ t.salary }}</dt>
                         <dd class="mt-1">{{ c.money.salary_range }}</dd>
@@ -209,8 +209,8 @@ onUnmounted(() => clearInterval(ticker));
                         <dt class="text-xs text-muted-foreground uppercase">{{ t.upfront }}</dt>
                         <dd class="mt-1">{{ c.money.upfront_costs }}</dd>
                     </div>
-                    <p class="text-muted-foreground md:col-span-3">{{ c.money.note }}</p>
-                    <div class="md:col-span-3"><SourceLink :url="c.money.source_url" :sources="brief.sources" /></div>
+                    <p class="text-muted-foreground md:col-span-full">{{ c.money.note }}</p>
+                    <div class="md:col-span-full"><SourceLink :url="c.money.source_url" :sources="brief.sources" /></div>
                 </dl>
             </section>
 

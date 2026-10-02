@@ -8,6 +8,41 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/briefs';
 
+const professions = [
+    'Software engineer',
+    'Data scientist',
+    'AI / ML engineer',
+    'Registered nurse',
+    'Doctor',
+    'Teacher',
+    'Civil engineer',
+    'Electrical engineer',
+    'Accountant',
+    'Financial analyst',
+    'Marketing manager',
+    'Product manager',
+    'Architect',
+    'Pharmacist',
+    'Startup founder',
+];
+
+const countries = [
+    'Egypt',
+    'India',
+    'Pakistan',
+    'Philippines',
+    'Jordan',
+    'Lebanon',
+    'Morocco',
+    'Tunisia',
+    'Nigeria',
+    'Kenya',
+    'United Kingdom',
+    'United States',
+    'Turkey',
+    'Brazil',
+];
+
 const families = [
     { value: 'single', label: 'Just me' },
     { value: 'couple', label: 'With partner' },
@@ -79,10 +114,15 @@ const promises = [
                     <Input
                         id="profession"
                         name="profession"
+                        list="professions"
+                        autocomplete="off"
                         required
                         v-focus
                         placeholder="e.g. Software engineer, nurse, teacher"
                     />
+                    <datalist id="professions">
+                        <option v-for="p in professions" :key="p" :value="p" />
+                    </datalist>
                     <InputError :message="errors.profession" />
                 </div>
 
@@ -92,9 +132,14 @@ const promises = [
                         <Input
                             id="country"
                             name="country"
+                            list="countries"
+                            autocomplete="off"
                             required
                             placeholder="e.g. Egypt"
                         />
+                        <datalist id="countries">
+                            <option v-for="c in countries" :key="c" :value="c" />
+                        </datalist>
                         <InputError :message="errors.country" />
                     </div>
                     <div class="grid gap-2">
