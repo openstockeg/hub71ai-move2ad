@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <title>@yield('title') - Move2AD</title>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
     {{-- Self-contained on purpose: an error page must not depend on the app's build. --}}
     <style>
         :root { --brand: oklch(0.5 0.1 195); --sand: oklch(0.96 0.02 85); --fg: #171717; --muted: #737373; --bg: #fff; --border: #ececec; }
