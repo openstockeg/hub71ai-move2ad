@@ -1,6 +1,7 @@
 {
     "meta": {
-        "verified_at": "2026-10-02",
+        "verified_at": "2026-10-01",
+        "links_checked_at": "2026-10-02",
         "note": "Curated grounding facts for Move2AD. source_type 'official' = government/regulator page; 'secondary' = reputable press/legal/industry source citing official data. Facts with needs_verification=true must be re-checked via web_search (allowed_domains) before being shown as definitive."
     },
     "allowed_domains": [
@@ -97,7 +98,7 @@
                 "durations_days": [60, 90, 120],
                 "max_total_days": 180
             },
-            "source_url": "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/jobseeker-visit-visa",
+            "source_url": "https://u.ae/en/information-and-services/visa-and-emirates-id/Types-of-visas/Visit-visa/jobseeker-visit-visa",
             "source_type": "official"
         },
         {
@@ -157,7 +158,7 @@
         {
             "id": "demand.workforce",
             "category": "demand",
-            "claim": "Employment in Abu Dhabi grew 9.1% in 2024 to 2.76 million people. Blue-collar jobs grew 11.4% and white-collar jobs 6.4%, driven by large infrastructure and construction projects.",
+            "claim": "Abu Dhabi's labour force grew 9.1% in 2024: 55.2% blue-collar and 44.8% white-collar workers.",
             "source_url": "https://scad.gov.ae/web/guest/w/abu-dhabi-population-in-2024-grows-7-5-to-reach-4-14m",
             "source_type": "official"
         },
@@ -227,8 +228,8 @@
         {
             "id": "housing.tawtheeq",
             "category": "housing",
-            "claim": "Tawtheeq is Abu Dhabi's official tenancy contract registration, done online through DARI or TAMM (AED 50 to register a new lease). A contract signed outside the online service is not a Tawtheeq contract. A registered Tawtheeq is commonly asked for when connecting water and electricity and for tenancy-linked services.",
-            "source_url": "https://www.tamm.abudhabi/en/life-events/individual/HousingProperties/Contracts-and-Consultations/RequesttoRegisteraNewLeaseContract",
+            "claim": "Tawtheeq is Abu Dhabi's official tenancy contract registration, done online through DARI. A contract signed outside the online service is not a Tawtheeq contract. A registered Tawtheeq is commonly asked for when connecting water and electricity and for tenancy-linked services.",
+            "source_url": "https://help.dari.ae/en/support/solutions/articles/73000623295-what-is-the-difference-between-a-tawtheeq-contract-and-a-tenancy-contract-",
             "source_type": "official",
             "needs_verification": true
         },

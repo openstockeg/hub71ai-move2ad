@@ -63,7 +63,7 @@ watchEffect(() => {
                 </Link>
                 <div class="flex items-center gap-4 text-sm">
                     <Link
-                        :href="data()"
+                        :href="data({ query: { lang: locale } })"
                         class="hidden text-muted-foreground hover:text-foreground sm:inline"
                         >{{ t.data }}</Link
                     >
@@ -98,7 +98,7 @@ watchEffect(() => {
             >
                 <p>{{ t.disclaimer }}</p>
                 <Link
-                    :href="data()"
+                    :href="data({ query: { lang: locale } })"
                     class="flex w-fit items-center gap-1.5 font-medium text-brand hover:underline"
                     ><Database class="size-3.5" />{{ t.data }}</Link
                 >

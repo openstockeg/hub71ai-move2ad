@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Services\AnswerGenerator;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -83,18 +84,28 @@ class Answer extends Model
     /**
      * Ready answers whose question is safe to list publicly (sitemap, data page), most asked first.
      * Filtered in PHP: JSON boolean comparisons differ between SQLite and Postgres.
+     * Cached for a minute as plain arrays (the cache refuses to unserialize models),
+     * since crawlers and the data page all read the same list.
      *
-     * @return Collection<int, self>
+     * @return Collection<int, array{id: string, question: string, locale: string, asked_count: int, updated_at: string|null}>
      */
     public static function published(): Collection
     {
-        return self::where('status', Brief::READY)
+        return collect(Cache::remember('answers.published', 60, fn () => self::where('status', Brief::READY)
             ->orderByDesc('asked_count')
             ->latest('updated_at')
             ->limit(5000)
             ->get()
             ->filter(fn (self $answer) => ($answer->content['publishable'] ?? false) === true)
-            ->values();
+            ->map(fn (self $answer) => [
+                'id' => $answer->public_id,
+                'question' => $answer->publicQuestion(),
+                'locale' => $answer->locale,
+                'asked_count' => $answer->asked_count,
+                'updated_at' => $answer->updated_at?->toAtomString(),
+            ])
+            ->values()
+            ->all()));
     }
 
     /**

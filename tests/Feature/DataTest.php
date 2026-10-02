@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Answer;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia as Assert;
 
 function publishedAnswer(string $question, bool $publishable = true, string $status = 'ready'): Answer
@@ -49,4 +50,34 @@ test('the sitemap and llms.txt list only publishable answer pages', function () 
         ->assertDontSee('0501234567');
 
     $this->get('/robots.txt')->assertOk()->assertSee('Sitemap: '.route('sitemap'));
+});
+
+test('the published list survives a serializing cache store', function () {
+    // Production caches in the database; the array store used in tests never serializes.
+    config(['cache.default' => 'file']);
+    Cache::flush();
+    $public = publishedAnswer('Is a job-seeker visa possible?');
+
+    $this->get(route('data'))->assertOk();
+    $this->get(route('data'))->assertOk()->assertInertia(fn (Assert $page) => $page->where('answers.top.0.id', $public->public_id));
+    $this->get('/sitemap.xml')->assertOk()->assertSee(route('answers.show', $public));
+
+    Cache::flush();
+});
+
+test('crawler files are cacheable and start no session', function () {
+    foreach (['/sitemap.xml', '/llms.txt', '/robots.txt'] as $path) {
+        $response = $this->get($path)->assertOk();
+
+        expect($response->headers->getCookies())->toBeEmpty()
+            ->and($response->headers->get('Cache-Control'))->toContain('public');
+    }
+});
+
+test('the data page interface follows the requested language', function () {
+    $this->get(route('data', ['lang' => 'ar']))
+        ->assertOk()
+        ->assertSee('<html lang="ar" dir="rtl"', false)
+        ->assertSee('<title>بياناتنا ومصادرنا - ', false)
+        ->assertInertia(fn (Assert $page) => $page->where('locale', 'ar')->where('links_checked_at', '2026-10-02'));
 });
