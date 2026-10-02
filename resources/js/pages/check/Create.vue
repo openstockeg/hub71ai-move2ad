@@ -14,6 +14,7 @@ const EMPLOYER_PAYS_LAW = 'https://uaelegislation.gov.ae/en/legislations/1541';
 
 const labels = {
     en: {
+        eyebrow: 'Job offer scam check',
         title: 'Is this job offer real?',
         intro: 'Paste the WhatsApp message, email or LinkedIn offer you received. We check it against UAE labour law and official warnings, and show you every red flag with its source.',
         placeholder: 'Paste the job offer here…',
@@ -28,6 +29,7 @@ To process your work visa and medical, please pay a refundable visa processing f
 Contact: alnoor.hr.recruitment@gmail.com / WhatsApp +971 55 123 4567`,
     },
     ar: {
+        eyebrow: 'فحص عروض العمل الاحتيالية',
         title: 'هل عرض العمل هذا حقيقي؟',
         intro: 'الصق رسالة واتساب أو البريد الإلكتروني أو عرض لينكدإن الذي وصلك. نفحصه وفق قانون العمل الإماراتي والتحذيرات الرسمية، ونعرض لك كل علامة تحذير مع مصدرها.',
         placeholder: 'الصق عرض العمل هنا…',
@@ -61,7 +63,7 @@ const isDesktop = window.matchMedia('(min-width: 768px)').matches;
                 <p
                     class="flex items-center gap-2 text-xs font-medium tracking-wide text-brand uppercase md:text-sm"
                 >
-                    <ShieldAlert class="size-4" /> Move2AD
+                    <ShieldAlert class="size-4" /> {{ t.eyebrow }}
                 </p>
                 <div class="flex gap-1 rounded-md border bg-card p-0.5 text-sm">
                     <Link
